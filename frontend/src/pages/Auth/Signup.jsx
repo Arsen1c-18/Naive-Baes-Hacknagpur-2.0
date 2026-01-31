@@ -6,10 +6,7 @@ import { Shield, User, Smartphone, AlertCircle, MapPin } from 'lucide-react';
 
 const Signup = () => {
     const [formData, setFormData] = useState({
-        fullName: '',
         email: '',
-        phone: '',
-        emergencyContact: '',
         password: '',
         confirmPassword: ''
     });
@@ -25,9 +22,7 @@ const Signup = () => {
         const params = new URLSearchParams(window.location.search);
         const message = params.get('message');
         if (message) {
-            setError(message); // Using setError to show it in red/warning style, or setMsg for green
-            // Ideally if it's an error like "Account doesn't exist", maybe yellow/red is better?
-            // The user said "redirect to sign up page" with a message.
+            setError(message);
         }
     }, []);
 
@@ -64,24 +59,17 @@ const Signup = () => {
 
         setLoading(true);
 
-        // Prepare metadata
-        const metaData = {
-            full_name: formData.fullName,
-            phone: formData.phone,
-            emergency_contact: formData.emergencyContact
-        };
-
-        const { data, error } = await signUp(formData.email, formData.password, metaData);
+        const { data, error } = await signUp(formData.email, formData.password, {});
 
         if (error) {
             setError(error.message);
         } else {
-            // If session exists (auto-login active or mock), go to dashboard
-            // Otherwise show verification message
+            // Note: If 'Email Confirmations' is disabled in Supabase, data.session will be present
+            // and we can redirect immediately. If enabled, we show the check email message.
             if (data?.session || data?.user?.isDemo) {
                 navigate('/');
             } else {
-                setMsg("Account created! Please check your email for verification before logging in.");
+                setMsg("Account created! If enabled, please check your email for verification.");
             }
         }
         setLoading(false);
@@ -118,44 +106,6 @@ const Signup = () => {
                 )}
 
                 <form className="space-y-4" onSubmit={handleSubmit}>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1">Full Name (Username)</label>
-                            <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <User className="h-4 w-4 text-slate-400" />
-                                </div>
-                                <input
-                                    name="fullName"
-                                    type="text"
-                                    required
-                                    className="input pl-10"
-                                    placeholder="John Doe"
-                                    value={formData.fullName}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1">Phone Number</label>
-                            <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <Smartphone className="h-4 w-4 text-slate-400" />
-                                </div>
-                                <input
-                                    name="phone"
-                                    type="tel"
-                                    required
-                                    className="input pl-10"
-                                    placeholder="+91..."
-                                    value={formData.phone}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                        </div>
-                    </div>
-
                     <div>
                         <label className="block text-sm font-medium text-slate-700 mb-1">Email Address</label>
                         <input
@@ -167,24 +117,6 @@ const Signup = () => {
                             value={formData.email}
                             onChange={handleChange}
                         />
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1">Emergency Contact</label>
-                        <div className="relative">
-                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <AlertCircle className="h-4 w-4 text-red-400" />
-                            </div>
-                            <input
-                                name="emergencyContact"
-                                type="tel"
-                                required
-                                className="input pl-10 border-red-100 focus:border-red-500 focus:ring-red-200"
-                                placeholder="Emergency Number (e.g. Guardian)"
-                                value={formData.emergencyContact}
-                                onChange={handleChange}
-                            />
-                        </div>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

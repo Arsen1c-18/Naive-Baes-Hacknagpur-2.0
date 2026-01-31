@@ -47,9 +47,12 @@ const CompleteProfile = () => {
         setError('');
         setLoading(true);
 
-        const minDelayPromise = new Promise(resolve => setTimeout(resolve, 8000)); // 8 seconds wait
+        const minDelayPromise = new Promise(resolve => setTimeout(resolve, 3000)); // Reduced from 8s to 3s for faster debug
 
-        if (!supabaseConnected || user?.isDemo) {
+        // If Supabase is NOT connected, just mock it.
+        // If it IS connected, we MUST try to save, even if 'isDemo' (unverified email).
+        // If unverified, the DB save might fail (RLS), but at least we'll see the error.
+        if (!supabaseConnected) {
             await minDelayPromise;
             // Update local state to simulate save
             setProfile({
@@ -69,19 +72,57 @@ const CompleteProfile = () => {
 
             // Database Operations
             const dbOperations = async () => {
-                // 1. Update/Insert Public Profile
-                const { error: profileError } = await supabase
+                console.log("Starting DB Operations for user:", userId);
+
+                // 1. Check existence
+                const { data: existingProfile, error: fetchError } = await supabase
                     .from('public_profiles')
-                    .upsert({
-                        id: userId,
-                        name: formData.fullName,
-                        phone: formData.phone,
-                        updated_at: new Date().toISOString()
-                    });
+                    .select('id')
+                    .eq('id', userId)
+                    .maybeSingle();
 
-                if (profileError) throw profileError;
+                if (fetchError) {
+                    console.error("Profile check error:", fetchError);
+                    throw fetchError;
+                }
 
-                // 2. Update/Insert Emergency Contact
+                console.log("Existing Profile:", existingProfile);
+
+                let profileError;
+
+                if (existingProfile) {
+                    // UPDATE
+                    console.log("Updating existing profile...");
+                    const { error } = await supabase
+                        .from('public_profiles')
+                        .update({
+                            name: formData.fullName,
+                            phone: formData.phone,
+                            updated_at: new Date().toISOString()
+                        })
+                        .eq('id', userId);
+                    profileError = error;
+                } else {
+                    // INSERT
+                    console.log("Inserting new profile...");
+                    const { error } = await supabase
+                        .from('public_profiles')
+                        .insert([{
+                            id: userId,
+                            name: formData.fullName,
+                            phone: formData.phone,
+                            created_at: new Date().toISOString(),
+                            updated_at: new Date().toISOString()
+                        }]);
+                    profileError = error;
+                }
+
+                if (profileError) {
+                    console.error("Profile write error:", profileError);
+                    throw profileError;
+                }
+
+                // 2. Emergency Contact (Upsert is usually fine here, but let's match logic)
                 const { error: contactError } = await supabase
                     .from('emergency_contacts')
                     .upsert({
@@ -91,9 +132,13 @@ const CompleteProfile = () => {
                         updated_at: new Date().toISOString()
                     }, { onConflict: 'user_id' });
 
-                if (contactError) throw contactError;
+                if (contactError) {
+                    console.error("Contact write error:", contactError);
+                    throw contactError;
+                }
 
                 // Update local context after successful DB save
+                console.log("DB Operations Successful");
                 setProfile({
                     id: userId,
                     name: formData.fullName,
@@ -110,7 +155,7 @@ const CompleteProfile = () => {
 
         } catch (err) {
             console.error(err);
-            setError(err.message || "Failed to save profile.");
+            setError(JSON.stringify(err, null, 2) || err.message || "Failed to save profile.");
             setLoading(false); // Stop loading only on error so they can retry
         }
     };
@@ -139,7 +184,7 @@ const CompleteProfile = () => {
 
                 {error && (
                     <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-r-md">
-                        <p className="text-sm text-red-700">{error}</p>
+                        <p className="text-sm text-red-700 whitespace-pre-wrap">{error}</p>
                     </div>
                 )}
 

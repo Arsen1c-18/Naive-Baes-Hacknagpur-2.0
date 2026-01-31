@@ -16,10 +16,10 @@ const ProtectedRoute = ({ children }) => {
     }
 
     // Profile Completion Check
-    // If Supabase is connected, User is logged in, but Profile is missing...
+    // If Supabase is connected, User is logged in, but Profile is missing OR Name is missing...
     // AND we are not already on the completion page...
     // THEN redirect to /complete-profile
-    if (supabaseConnected && !profile && location.pathname !== '/complete-profile') {
+    if (supabaseConnected && (!profile || !profile.name) && location.pathname !== '/complete-profile') {
         return <Navigate to="/complete-profile" replace />;
     }
 

@@ -35,11 +35,16 @@ export const AuthProvider = ({ children }) => {
     // Fetch Profile Helper & State
     const [profile, setProfile] = useState(null);
     const [emergencyContact, setEmergencyContact] = useState(null);
+    const [profileLoading, setProfileLoading] = useState(true);
 
     useEffect(() => {
-        if (user?.isDemo) return; // Skip DB fetch for demo users to keep local profile
+        if (user?.isDemo) {
+            setProfileLoading(false);
+            return;
+        }
 
         if (user && supabase) {
+            setProfileLoading(true);
             const fetchProfile = async () => {
                 // Use maybeSingle() to avoid 406 errors for new users
                 const { data: profileData } = await supabase
@@ -54,8 +59,8 @@ export const AuthProvider = ({ children }) => {
                     const flow = sessionStorage.getItem('auth_flow');
                     if (flow === 'login') {
                         await signOut();
-                        // alert("Account does not exist with this email. Please Sign Up first.");
                         navigate('/signup?message=Account+does+not+exist.+Please+Sign+Up');
+                        setProfileLoading(false);
                         return;
                     }
                 }
@@ -68,11 +73,13 @@ export const AuthProvider = ({ children }) => {
                     .maybeSingle();
 
                 if (contactData) setEmergencyContact(contactData);
+                setProfileLoading(false);
             };
             fetchProfile();
         } else {
             setProfile(null);
             setEmergencyContact(null);
+            setProfileLoading(false);
         }
     }, [user]);
 
@@ -101,17 +108,9 @@ export const AuthProvider = ({ children }) => {
             const demoUser = { ...data.user, isDemo: true };
             setUser(demoUser);
 
-            // Set local profile immediately to prevent "Complete Profile" loop
-            setProfile({
-                id: demoUser.id,
-                name: metaData.full_name,
-                phone: metaData.phone,
-                // emergency_contact is in separate table usually, but for local state we can handle it if needed
-                // or just leave emergencyContact null for now, or set it too.
-            });
-            if (metaData.emergency_contact) {
-                setEmergencyContact({ phone_number: metaData.emergency_contact });
-            }
+            // Do NOT set local profile here. We want to force the "Complete Profile" flow.
+            // setProfile({ ... }); 
+            // if (metaData.emergency_contact) ...
 
             return {
                 data: { ...data, session: { user: demoUser, access_token: 'demo-token' } },
@@ -162,15 +161,16 @@ export const AuthProvider = ({ children }) => {
 
     const value = {
         user,
-        profile, // New: Expose profile data
-        setProfile, // New: Allow manual update (for demo/mock)
-        emergencyContact, // New: Expose emergency contact
-        setEmergencyContact, // New: Allow manual update
+        profile,
+        setProfile,
+        profileLoading,
+        emergencyContact,
+        setEmergencyContact,
         signUp,
         signIn,
         signInWithGoogle,
         signOut,
-        mockLogin, // Exposed for demo purposes
+        mockLogin,
         supabaseConnected: !!supabase
     };
 
