@@ -40,9 +40,9 @@ const Chatbot = () => {
 
     return (
         <PageShell title="Safety Assistant AI">
-            <div className="h-[600px] flex flex-col bg-surface/50 rounded-2xl border border-surface-border overflow-hidden shadow-2xl backdrop-blur-sm">
+            <div className="h-[600px] flex flex-col bg-white rounded-2xl border border-indigo-100 overflow-hidden shadow-soft-indigo">
                 {/* Messages Area */}
-                <div className="flex-1 p-6 overflow-y-auto space-y-4">
+                <div className="flex-1 p-6 overflow-y-auto space-y-4 bg-slate-50/50">
                     <AnimatePresence initial={false}>
                         {messages.map((msg) => (
                             <motion.div
@@ -52,14 +52,14 @@ const Chatbot = () => {
                                 className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                             >
                                 <div className={`flex gap-3 max-w-[85%] ${msg.sender === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
-                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg ${msg.sender === 'user' ? 'bg-primary' : 'bg-accent'
+                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 shadow-md ${msg.sender === 'user' ? 'bg-gradient-to-r from-indigo-500 to-purple-600' : 'bg-white border border-indigo-100'
                                         }`}>
-                                        {msg.sender === 'user' ? <User size={18} className="text-white" /> : <Bot size={18} className="text-white" />}
+                                        {msg.sender === 'user' ? <User size={20} className="text-white" /> : <Bot size={20} className="text-indigo-600" />}
                                     </div>
 
-                                    <div className={`p-4 rounded-2xl shadow-md leading-relaxed ${msg.sender === 'user'
-                                            ? 'bg-primary text-white rounded-tr-none'
-                                            : 'bg-surface text-gray-100 border border-surface-border rounded-tl-none'
+                                    <div className={`p-4 rounded-2xl shadow-sm leading-relaxed ${msg.sender === 'user'
+                                        ? 'bg-indigo-600 text-white rounded-tr-none'
+                                        : 'bg-white text-slate-800 border border-indigo-100 rounded-tl-none font-medium'
                                         }`}>
                                         <p className="m-0 text-sm md:text-base">{msg.text}</p>
                                     </div>
@@ -72,12 +72,12 @@ const Chatbot = () => {
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
-                            className="flex items-center gap-2 text-gray-400 text-sm ml-14"
+                            className="flex items-center gap-2 text-slate-400 text-sm ml-16"
                         >
                             <span className="flex gap-1">
-                                <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
-                                <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
-                                <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"></span>
+                                <span className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+                                <span className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+                                <span className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-bounce"></span>
                             </span>
                             Safety Assistant is typing
                         </motion.div>
@@ -86,17 +86,18 @@ const Chatbot = () => {
                 </div>
 
                 {/* Input Area */}
-                <div className="p-4 bg-surface border-t border-surface-border">
+                <div className="p-4 bg-white border-t border-indigo-100">
                     <form onSubmit={handleSend} className="flex gap-3 relative">
                         <input
-                            className="input rounded-full pl-6 pr-14 bg-bg py-3 focus:ring-2 focus:ring-primary/50"
+                            className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-full pl-6 pr-14 py-4 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all shadow-inner"
                             placeholder="Ask about safety..."
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                         />
                         <button
                             type="submit"
-                            className="absolute right-2 top-1/2 -translate-y-1/2 btn btn-primary rounded-full w-10 h-10 p-0 flex items-center justify-center hover:scale-110 active:scale-95 transition-transform"
+                            disabled={!input.trim()}
+                            className="absolute right-2 top-1/2 -translate-y-1/2 bg-indigo-600 text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-indigo-700 disabled:opacity-50 disabled:hover:bg-indigo-600 transition-all shadow-md shadow-indigo-200"
                         >
                             <Send size={18} />
                         </button>

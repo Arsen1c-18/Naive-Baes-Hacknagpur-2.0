@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { motion } from 'framer-motion';
-import { User, Mail, Shield, Calendar, Clock } from 'lucide-react';
+import { User, Shield, Calendar, Clock } from 'lucide-react';
 
 const UserDashboard = () => {
     const { user } = useAuth();
@@ -25,6 +25,8 @@ const UserDashboard = () => {
         });
     };
 
+    const meta = user.user_metadata || {};
+
     return (
         <div className="container mx-auto px-4 py-12 max-w-4xl">
             <motion.div
@@ -47,50 +49,62 @@ const UserDashboard = () => {
                         <User size={40} />
                     </div>
                     <div>
-                        <h2 className="text-2xl font-bold text-slate-900">Welcome back!</h2>
+                        <h2 className="text-2xl font-bold text-slate-900">
+                            Welcome, {meta.full_name || 'User'}!
+                        </h2>
                         <p className="text-slate-500 text-sm">{user.email}</p>
                     </div>
-                    <div className="ml-auto">
+                    <div className="ml-auto hidden md:block">
                         <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 border border-green-200">
-                            <Shield size={12} className="mr-1" /> Verified Account
+                            <Shield size={12} className="mr-1" /> Active Account
                         </span>
                     </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
-                        <div className="flex items-center gap-3 mb-2 text-slate-500 text-sm font-medium uppercase tracking-wider">
-                            <Mail size={16} /> Email Address
-                        </div>
-                        <div className="text-slate-900 font-medium text-lg truncate">
-                            {user.email}
+                    {/* Security & Contact Info */}
+                    <div className="p-4 bg-slate-50 rounded-xl border border-slate-100 col-span-1 md:col-span-2">
+                        <h3 className="text-md font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <Shield className="text-primary" size={18} /> Emergency & Contact
+                        </h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Emergency Contact</label>
+                                <div className="text-red-500 font-bold text-lg">
+                                    {meta.emergency_contact || 'None Set'}
+                                </div>
+                            </div>
+                            <div>
+                                <label className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Phone Number</label>
+                                <div className="text-slate-900 font-medium">
+                                    {meta.phone || 'N/A'}
+                                </div>
+                            </div>
+                            <div className="md:col-span-2">
+                                <label className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Address</label>
+                                <div className="text-slate-900 font-medium whitespace-pre-wrap">
+                                    {meta.address || 'N/A'}
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
-                        <div className="flex items-center gap-3 mb-2 text-slate-500 text-sm font-medium uppercase tracking-wider">
-                            <Shield size={16} /> User ID
-                        </div>
-                        <div className="text-slate-900 font-mono text-sm break-all">
-                            {user.id}
-                        </div>
-                    </div>
-
-                    <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
-                        <div className="flex items-center gap-3 mb-2 text-slate-500 text-sm font-medium uppercase tracking-wider">
-                            <Calendar size={16} /> Account Created
-                        </div>
-                        <div className="text-slate-900 font-medium">
-                            {formatDate(user.created_at)}
-                        </div>
-                    </div>
-
+                    {/* Account Stats */}
                     <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
                         <div className="flex items-center gap-3 mb-2 text-slate-500 text-sm font-medium uppercase tracking-wider">
                             <Clock size={16} /> Last Login
                         </div>
                         <div className="text-slate-900 font-medium">
                             {formatDate(user.last_sign_in_at)}
+                        </div>
+                    </div>
+
+                    <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                        <div className="flex items-center gap-3 mb-2 text-slate-500 text-sm font-medium uppercase tracking-wider">
+                            <Calendar size={16} /> Member Since
+                        </div>
+                        <div className="text-slate-900 font-medium">
+                            {formatDate(user.created_at)}
                         </div>
                     </div>
                 </div>

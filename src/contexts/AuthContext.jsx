@@ -30,9 +30,24 @@ export const AuthProvider = ({ children }) => {
         return () => subscription.unsubscribe();
     }, []);
 
-    const signUp = async (email, password) => {
-        if (!supabase) return { error: { message: "Supabase not configured" } };
-        return await supabase.auth.signUp({ email, password });
+    const signUp = async (email, password, metaData = {}) => {
+        if (!supabase) {
+            // Mock Signup - Auto Login
+            const mockUser = {
+                id: 'mock-user-' + Math.random().toString(36).substr(2, 9),
+                email,
+                user_metadata: metaData
+            };
+            setUser(mockUser);
+            return { data: { user: mockUser, session: { user: mockUser } }, error: null };
+        }
+        return await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+                data: metaData
+            }
+        });
     };
 
     const signIn = async (email, password) => {
@@ -58,7 +73,16 @@ export const AuthProvider = ({ children }) => {
 
     // Mock login for MVP if Supabase is missing
     const mockLogin = () => {
-        setUser({ id: 'mock-user-id', email: 'user@example.com' });
+        setUser({
+            id: 'mock-user-id',
+            email: 'user@example.com',
+            user_metadata: {
+                full_name: 'Demo User',
+                phone: '9876543210',
+                emergency_contact: '112',
+                address: '123 Safety St, Secure City'
+            }
+        });
     };
 
     const value = {
