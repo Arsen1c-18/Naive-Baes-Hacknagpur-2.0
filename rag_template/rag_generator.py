@@ -10,25 +10,19 @@ def generate_report(template: str, incident_text: str) -> str:
 USER INCIDENT DESCRIPTION:
 {incident_text}
 
-Generate a structured, formal report suitable for official submission.
+Write a complete, structured complaint that can be directly copied and submitted.
 Do not ask questions.
-Do not invent facts.
+Do not invent details.
 """
 
-    completion = client.chat.completions.create(
+    response = client.chat.completions.create(
         model="llama-3.1-8b-instant",
         messages=[
-            {
-                "role": "system",
-                "content": "You generate formal complaint reports."
-            },
-            {
-                "role": "user",
-                "content": prompt
-            }
+            {"role": "system", "content": "You write formal complaint documents."},
+            {"role": "user", "content": prompt}
         ],
         temperature=0.3,
-        max_tokens=400
+        max_tokens=450
     )
 
-    return completion.choices[0].message.content
+    return response.choices[0].message.content

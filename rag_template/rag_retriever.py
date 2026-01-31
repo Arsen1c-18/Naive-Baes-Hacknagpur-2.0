@@ -3,13 +3,13 @@ import os
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def get_template(complaint_type: str) -> str:
-    template_map = {
+    files = {
         "cybercrime": "cybercrime.txt",
         "fir": "fir.txt",
         "platform": "platform.txt"
     }
 
-    filename = template_map.get(complaint_type)
+    filename = files.get(complaint_type)
     if not filename:
         raise ValueError("Invalid complaint type")
 
