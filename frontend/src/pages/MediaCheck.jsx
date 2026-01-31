@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PageShell from '../components/PageShell';
-import { mockAnalyzeMedia } from '../lib/mockData';
+import { api } from '../lib/api';
 import { Upload, FileAudio, FileImage, ShieldCheck, ShieldAlert } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -20,9 +20,29 @@ const MediaCheck = () => {
     const handleAnalyze = async () => {
         if (!file) return;
         setLoading(true);
-        const res = await mockAnalyzeMedia(file);
-        setResult(res);
-        setLoading(false);
+        try {
+            let res;
+            if (file.type.startsWith('image/')) {
+                res = await api.analyzeScreenshot(file);
+            } else if (file.type.startsWith('audio/')) {
+                res = await api.analyzeVoice(file);
+            }
+
+            setResult({
+                detected: res.risk_level === 'HIGH' || res.risk_level === 'MEDIUM',
+                message: res.analysis || `Analysis complete. Risk Level: ${res.risk_level}`,
+                confidence: Math.round(res.confidence * 100)
+            });
+        } catch (error) {
+            console.error(error);
+            setResult({
+                detected: true,
+                message: "Error analyzing file. Please try again.",
+                confidence: 0
+            });
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (

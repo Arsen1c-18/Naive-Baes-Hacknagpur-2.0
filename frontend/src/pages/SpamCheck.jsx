@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PageShell from '../components/PageShell';
-import { checkSpam } from '../lib/mockData';
+import { api } from '../lib/api';
 import { AlertTriangle, CheckCircle, AlertOctagon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -9,16 +9,32 @@ const SpamCheck = () => {
     const [result, setResult] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    const handleCheck = () => {
+    const handleCheck = async () => {
         if (!text.trim()) return;
         setLoading(true);
         setResult(null);
-        // Simulate API delay
-        setTimeout(() => {
-            const analysis = checkSpam(text);
-            setResult(analysis);
+        try {
+            const data = await api.analyzeText(text);
+            const riskLevel = data.risk_level === 'HIGH' ? 'High' : (data.risk_level === 'MEDIUM' ? 'Medium' : 'Low');
+            // Mocking 'score' inverse logic for trust score (100 - score)
+            // Backend confidence is threat confidence, so score = confidence * 100
+            const score = Math.round(data.confidence * 100);
+
+            setResult({
+                riskLevel: riskLevel,
+                score: score,
+                reasons: data.rules_triggered && data.rules_triggered.length > 0 ? data.rules_triggered : (data.pattern_detected ? [data.pattern_detected] : ["No specific spam patterns detected"])
+            });
+        } catch (error) {
+            console.error(error);
+            setResult({
+                riskLevel: 'Unknown',
+                score: 0,
+                reasons: ["Error connecting to server"]
+            });
+        } finally {
             setLoading(false);
-        }, 800);
+        }
     };
 
     return (

@@ -2,7 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { MessageCircle, X, Send, Bot, Minimize2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { SAFETY_BOT_RESPONSES } from '../lib/mockData';
+import ReactMarkdown from 'react-markdown';
+import { api } from '../lib/api';
 
 const FloatingChatbot = () => {
     const location = useLocation();
@@ -28,7 +29,7 @@ const FloatingChatbot = () => {
         return null; // hide on auth pages AND main chatbot page (if exists)
     }
 
-    const handleSend = (e) => {
+    const handleSend = async (e) => {
         e.preventDefault();
         if (!input.trim()) return;
 
@@ -37,12 +38,16 @@ const FloatingChatbot = () => {
         setInput('');
         setTyping(true);
 
-        setTimeout(() => {
-            const randomResponse = SAFETY_BOT_RESPONSES[Math.floor(Math.random() * SAFETY_BOT_RESPONSES.length)];
-            const botMsg = { id: Date.now() + 1, sender: 'bot', text: randomResponse };
+        try {
+            const { response } = await api.chatWithSafetyBot(userMsg.text);
+            const botMsg = { id: Date.now() + 1, sender: 'bot', text: response };
             setMessages(prev => [...prev, botMsg]);
+        } catch (error) {
+            const errorMsg = { id: Date.now() + 1, sender: 'bot', text: "Service unavailable." };
+            setMessages(prev => [...prev, errorMsg]);
+        } finally {
             setTyping(false);
-        }, 1500);
+        }
     };
 
     return (
@@ -90,7 +95,7 @@ const FloatingChatbot = () => {
                                         ? 'bg-cyan-600 text-white rounded-tr-none'
                                         : 'bg-white text-slate-700 border border-slate-100 shadow-sm rounded-tl-none'
                                         }`}>
-                                        {msg.text}
+                                        <ReactMarkdown>{msg.text}</ReactMarkdown>
                                     </div>
                                 </motion.div>
                             ))}

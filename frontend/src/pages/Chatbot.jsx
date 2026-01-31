@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import PageShell from '../components/PageShell';
-import { SAFETY_BOT_RESPONSES } from '../lib/mockData';
+import { api } from '../lib/api';
+import ReactMarkdown from 'react-markdown';
 import { Send, Bot, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -20,7 +21,7 @@ const Chatbot = () => {
         scrollToBottom();
     }, [messages, typing]);
 
-    const handleSend = (e) => {
+    const handleSend = async (e) => {
         e.preventDefault();
         if (!input.trim()) return;
 
@@ -29,13 +30,16 @@ const Chatbot = () => {
         setInput('');
         setTyping(true);
 
-        // Simulate bot response
-        setTimeout(() => {
-            const randomResponse = SAFETY_BOT_RESPONSES[Math.floor(Math.random() * SAFETY_BOT_RESPONSES.length)];
-            const botMsg = { id: Date.now() + 1, sender: 'bot', text: randomResponse };
+        try {
+            const { response } = await api.chatWithSafetyBot(userMsg.text);
+            const botMsg = { id: Date.now() + 1, sender: 'bot', text: response };
             setMessages(prev => [...prev, botMsg]);
+        } catch (error) {
+            const errorMsg = { id: Date.now() + 1, sender: 'bot', text: "Sorry, I'm having trouble connecting to the safety server right now." };
+            setMessages(prev => [...prev, errorMsg]);
+        } finally {
             setTyping(false);
-        }, 1500);
+        }
     };
 
     return (
@@ -61,7 +65,9 @@ const Chatbot = () => {
                                         ? 'bg-indigo-600 text-white rounded-tr-none'
                                         : 'bg-white text-slate-800 border border-indigo-100 rounded-tl-none font-medium'
                                         }`}>
-                                        <p className="m-0 text-sm md:text-base">{msg.text}</p>
+                                        <div className="prose prose-sm max-w-none text-inherit">
+                                            <ReactMarkdown>{msg.text}</ReactMarkdown>
+                                        </div>
                                     </div>
                                 </div>
                             </motion.div>

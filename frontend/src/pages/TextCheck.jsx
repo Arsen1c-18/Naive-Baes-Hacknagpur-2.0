@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PageShell from '../components/PageShell';
-import { analyzeText } from '../lib/mockData';
+import { api } from '../lib/api';
 import { ShieldAlert, ShieldCheck } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -9,13 +9,27 @@ const TextCheck = () => {
     const [result, setResult] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    const handleAnalyze = () => {
+    const handleAnalyze = async () => {
         if (!text.trim()) return;
         setLoading(true);
-        setTimeout(() => {
-            setResult(analyzeText(text));
+        try {
+            const data = await api.analyzeText(text);
+            // Map backend response to frontend expected format
+            setResult({
+                threatType: data.pattern_detected || (data.risk_level === 'LOW' ? 'Safe' : 'Suspicious'),
+                riskScore: Math.round(data.confidence * 100),
+                guidance: data.analysis ? [data.analysis] : ["No specific guidance provided."]
+            });
+        } catch (error) {
+            console.error(error);
+            setResult({
+                threatType: 'Error',
+                riskScore: 0,
+                guidance: ["Failed to analyze text. Please try again."]
+            });
+        } finally {
             setLoading(false);
-        }, 1000);
+        }
     };
 
     return (
