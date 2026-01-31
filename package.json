@@ -1,0 +1,9 @@
+{
+    "name": "digital-safety-root",
+    "version": "1.0.0",
+    "description": "Root helper to run frontend commands",
+    "scripts": {
+        "dev": "npm run dev --prefix frontend",
+        "install:frontend": "npm install --prefix frontend"
+    }
+}

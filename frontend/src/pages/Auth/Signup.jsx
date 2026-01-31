@@ -117,7 +117,7 @@ const Signup = () => {
 
             // If session exists (auto-login active or mock), go to dashboard
             // Otherwise show verification message
-            if (data?.session) {
+            if (data?.session || data?.user?.isDemo) {
                 navigate('/');
             } else {
                 setMsg("Account created! Please check your email for verification before logging in.");
@@ -273,7 +273,7 @@ const Signup = () => {
 
                 <button
                     onClick={handleGoogleLogin}
-                    className="w-full flex items-center justify-center gap-3 px-4 py-2 border border-slate-200 rounded-lg shadow-sm bg-white text-slate-700 hover:bg-slate-50 font-medium transition-colors cursor-not-allowed opacity-70"
+                    className="w-full flex items-center justify-center gap-3 px-4 py-2 border border-slate-200 rounded-lg shadow-sm bg-white text-slate-700 hover:bg-slate-50 font-medium transition-colors"
                 >
                     <svg className="h-5 w-5" viewBox="0 0 24 24">
                         <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />

@@ -35,6 +35,8 @@ export const AuthProvider = ({ children }) => {
     const [emergencyContact, setEmergencyContact] = useState(null);
 
     useEffect(() => {
+        if (user?.isDemo) return; // Skip DB fetch for demo users to keep local profile
+
         if (user && supabase) {
             const fetchProfile = async () => {
                 // Use maybeSingle() to avoid 406 errors for new users
@@ -73,13 +75,39 @@ export const AuthProvider = ({ children }) => {
             setUser(mockUser);
             return { data: { user: mockUser, session: { user: mockUser } }, error: null };
         }
-        return await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
             email,
             password,
             options: {
                 data: metaData
             }
         });
+
+        // Hack for Demo: If account created but email not verified (no session),
+        // we force a local login state so they can enter immediately.
+        if (data?.user && !data.session) {
+            const demoUser = { ...data.user, isDemo: true };
+            setUser(demoUser);
+
+            // Set local profile immediately to prevent "Complete Profile" loop
+            setProfile({
+                id: demoUser.id,
+                name: metaData.full_name,
+                phone: metaData.phone,
+                // emergency_contact is in separate table usually, but for local state we can handle it if needed
+                // or just leave emergencyContact null for now, or set it too.
+            });
+            if (metaData.emergency_contact) {
+                setEmergencyContact({ phone_number: metaData.emergency_contact });
+            }
+
+            return {
+                data: { ...data, session: { user: demoUser, access_token: 'demo-token' } },
+                error
+            };
+        }
+
+        return { data, error };
     };
 
     const signIn = async (email, password) => {
@@ -120,7 +148,9 @@ export const AuthProvider = ({ children }) => {
     const value = {
         user,
         profile, // New: Expose profile data
+        setProfile, // New: Allow manual update (for demo/mock)
         emergencyContact, // New: Expose emergency contact
+        setEmergencyContact, // New: Allow manual update
         signUp,
         signIn,
         signInWithGoogle,

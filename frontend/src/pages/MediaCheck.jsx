@@ -64,7 +64,7 @@ const MediaCheck = () => {
 
                 <div className="flex justify-center mb-8">
                     <button
-                        className={`btn btn-primary px-8 py-3 text-lg ${!file && 'opacity-50 cursor-not-allowed'}`}
+                        className={`btn btn-primary px-8 py-3 text-lg ${!file && 'opacity-50'}`}
                         onClick={handleAnalyze}
                         disabled={loading || !file}
                     >
@@ -79,8 +79,8 @@ const MediaCheck = () => {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0 }}
                             className={`p-6 rounded-xl border-l-4 shadow-lg ${result.detected
-                                    ? 'bg-red-500/10 border-red-500 border-l-red-500'
-                                    : 'bg-green-500/10 border-green-500 border-l-green-500'
+                                ? 'bg-red-500/10 border-red-500 border-l-red-500'
+                                : 'bg-green-500/10 border-green-500 border-l-green-500'
                                 }`}
                         >
                             <div className="flex items-center gap-6">

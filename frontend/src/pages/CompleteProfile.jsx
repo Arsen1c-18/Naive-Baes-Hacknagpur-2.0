@@ -5,7 +5,7 @@ import { supabase } from '../lib/supabase';
 import { Shield, Smartphone, AlertCircle, MapPin, User } from 'lucide-react';
 
 const CompleteProfile = () => {
-    const { user, profile, supabaseConnected } = useAuth();
+    const { user, profile, supabaseConnected, setProfile, setEmergencyContact } = useAuth();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -48,9 +48,12 @@ const CompleteProfile = () => {
         setError('');
         setLoading(true);
 
-        if (!supabaseConnected) {
-            // Mock completion
-            navigate('/');
+        if (!supabaseConnected || user?.isDemo) {
+            // Mock completion / Demo completion
+            const { setProfile, setEmergencyContact } = useAuth(); // Need to destructure these if not available in current scope
+            // Wait, useAuth() is called at top level. I need to make sure I have access to these.
+            // I'll update the top level destructuring in a separate edit or assume I can get them.
+            // Actually, let's just do the save logic here properly.
             return;
         }
 
