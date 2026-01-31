@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <defs>
+    <linearGradient id="cyber-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0891b2" /> <!-- Cyan 600 -->
+      <stop offset="100%" stop-color="#2563eb" /> <!-- Blue 600 -->
+    </linearGradient>
+  </defs>
+  <!-- Shield Background -->
+  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="url(#cyber-gradient)" />
+  <!-- Checkmark -->
+  <path d="M9 12l2 2 4-4" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+</svg>
