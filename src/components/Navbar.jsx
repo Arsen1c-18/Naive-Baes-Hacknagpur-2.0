@@ -27,7 +27,7 @@ const Navbar = () => {
 
 
     return (
-        <nav className="sticky top-0 z-50 bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg shadow-indigo-200/50">
+        <nav className="sticky top-0 z-50 bg-gradient-to-r from-cyan-600 to-blue-600 shadow-lg shadow-cyan-500/30">
             <div className="container mx-auto px-4 h-20 flex items-center justify-between">
                 <Link to="/" className="flex items-center gap-2 text-white no-underline group">
                     <Shield className="text-white group-hover:text-indigo-100 transition-colors duration-300" size={32} />
@@ -47,7 +47,6 @@ const Navbar = () => {
                     <Link to="/text-check" className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${location.pathname === '/text-check' ? 'bg-white/20 text-white shadow-sm' : 'text-indigo-100 hover:bg-white/10 hover:text-white'}`}>Text</Link>
                     <Link to="/media-check" className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${location.pathname === '/media-check' ? 'bg-white/20 text-white shadow-sm' : 'text-indigo-100 hover:bg-white/10 hover:text-white'}`}>Media</Link>
                     <Link to="/templates" className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${location.pathname === '/templates' ? 'bg-white/20 text-white shadow-sm' : 'text-indigo-100 hover:bg-white/10 hover:text-white'}`}>Templates</Link>
-                    <Link to="/chatbot" className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${location.pathname === '/chatbot' ? 'bg-white/20 text-white shadow-sm' : 'text-indigo-100 hover:bg-white/10 hover:text-white'}`}>Chatbot</Link>
                     <Link to="/community" className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${location.pathname === '/community' ? 'bg-white/20 text-white shadow-sm' : 'text-indigo-100 hover:bg-white/10 hover:text-white'}`}>Community</Link>
                     <button onClick={handleSOS} className="btn bg-red-600 hover:bg-red-700 text-white px-3 py-1 text-sm font-bold shadow-lg shadow-red-500/30 animate-pulse">
                         SOS
@@ -74,7 +73,6 @@ const Navbar = () => {
                             <Link to="/text-check" onClick={() => setIsOpen(false)} className="nav-link block">Text Analysis</Link>
                             <Link to="/media-check" onClick={() => setIsOpen(false)} className="nav-link block">Media Guard</Link>
                             <Link to="/templates" onClick={() => setIsOpen(false)} className="nav-link block">Templates</Link>
-                            <Link to="/chatbot" onClick={() => setIsOpen(false)} className="nav-link block">Chatbot</Link>
                             <Link to="/community" onClick={() => setIsOpen(false)} className="nav-link block">Community</Link>
                             <Link to="/faq" onClick={() => setIsOpen(false)} className="nav-link block">FAQ</Link>
                             <button onClick={handleSOS} className="w-full text-left nav-link block text-red-500 font-bold bg-red-50">

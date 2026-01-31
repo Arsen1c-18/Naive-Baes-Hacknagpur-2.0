@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider } from './contexts/AuthContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import FloatingChatbot from './components/FloatingChatbot';
 import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Auth/Login';
 import Signup from './pages/Auth/Signup';
@@ -37,6 +38,7 @@ function App() {
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </main>
+          <FloatingChatbot />
           <Footer />
         </div>
       </AuthProvider>
