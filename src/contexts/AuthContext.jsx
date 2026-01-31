@@ -30,6 +30,38 @@ export const AuthProvider = ({ children }) => {
         return () => subscription.unsubscribe();
     }, []);
 
+    // Fetch Profile Helper & State
+    const [profile, setProfile] = useState(null);
+    const [emergencyContact, setEmergencyContact] = useState(null);
+
+    useEffect(() => {
+        if (user && supabase) {
+            const fetchProfile = async () => {
+                // Use maybeSingle() to avoid 406 errors for new users
+                const { data: profileData } = await supabase
+                    .from('public_profiles')
+                    .select('*')
+                    .eq('id', user.id)
+                    .maybeSingle();
+
+                if (profileData) setProfile(profileData);
+
+                // Fetch Emergency Contact
+                const { data: contactData } = await supabase
+                    .from('emergency_contacts')
+                    .select('*')
+                    .eq('user_id', user.id)
+                    .maybeSingle();
+
+                if (contactData) setEmergencyContact(contactData);
+            };
+            fetchProfile();
+        } else {
+            setProfile(null);
+            setEmergencyContact(null);
+        }
+    }, [user]);
+
     const signUp = async (email, password, metaData = {}) => {
         if (!supabase) {
             // Mock Signup - Auto Login
@@ -83,10 +115,13 @@ export const AuthProvider = ({ children }) => {
                 address: '123 Safety St, Secure City'
             }
         });
+        setEmergencyContact({ phone_number: '112', contact_name: 'Emergency Services' });
     };
 
     const value = {
         user,
+        profile, // New: Expose profile data
+        emergencyContact, // New: Expose emergency contact
         signUp,
         signIn,
         signInWithGoogle,

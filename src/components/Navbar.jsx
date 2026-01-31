@@ -5,11 +5,23 @@ import { Shield, Menu, X, LogOut } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Navbar = () => {
-    const { user, signOut } = useAuth();
+    const { user, signOut, emergencyContact } = useAuth();
     const [isOpen, setIsOpen] = useState(false);
     const location = useLocation();
 
     const isActive = (path) => location.pathname === path ? 'active' : '';
+
+    const handleSOS = () => {
+        if (!emergencyContact || !emergencyContact.phone_number) {
+            alert('Emergency Contact not set! Please go to Dashboard/Profile to set it.');
+            // navigate('/complete-profile'); // Optional: redirect them
+            return;
+        }
+
+        const message = `SOS! I need help! I am using SafetyCompanion and this is an emergency.`;
+        const url = `https://wa.me/${emergencyContact.phone_number}?text=${encodeURIComponent(message)}`;
+        window.open(url, '_blank');
+    };
 
     if (!user) return null;
 
@@ -37,6 +49,9 @@ const Navbar = () => {
                     <Link to="/templates" className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${location.pathname === '/templates' ? 'bg-white/20 text-white shadow-sm' : 'text-indigo-100 hover:bg-white/10 hover:text-white'}`}>Templates</Link>
                     <Link to="/chatbot" className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${location.pathname === '/chatbot' ? 'bg-white/20 text-white shadow-sm' : 'text-indigo-100 hover:bg-white/10 hover:text-white'}`}>Chatbot</Link>
                     <Link to="/community" className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${location.pathname === '/community' ? 'bg-white/20 text-white shadow-sm' : 'text-indigo-100 hover:bg-white/10 hover:text-white'}`}>Community</Link>
+                    <button onClick={handleSOS} className="btn bg-red-600 hover:bg-red-700 text-white px-3 py-1 text-sm font-bold shadow-lg shadow-red-500/30 animate-pulse">
+                        SOS
+                    </button>
                     <button onClick={signOut} className="btn bg-white/10 text-white hover:bg-white/20 border border-white/20 px-3 py-1 text-xs gap-1">
                         <LogOut size={14} /> Logout
                     </button>
@@ -62,6 +77,9 @@ const Navbar = () => {
                             <Link to="/chatbot" onClick={() => setIsOpen(false)} className="nav-link block">Chatbot</Link>
                             <Link to="/community" onClick={() => setIsOpen(false)} className="nav-link block">Community</Link>
                             <Link to="/faq" onClick={() => setIsOpen(false)} className="nav-link block">FAQ</Link>
+                            <button onClick={handleSOS} className="w-full text-left nav-link block text-red-500 font-bold bg-red-50">
+                                SOS (Emergency)
+                            </button>
                             <div className="h-px bg-surface-border my-2"></div>
                             <button onClick={signOut} className="btn btn-danger w-full justify-start">
                                 <LogOut size={16} className="mr-2" /> Logout

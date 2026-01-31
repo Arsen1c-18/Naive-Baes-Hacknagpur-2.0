@@ -8,7 +8,7 @@ import Login from './pages/Auth/Login';
 import Signup from './pages/Auth/Signup';
 import {
   Home, UserDashboard, SpamCheck, TextCheck, MediaCheck,
-  TemplateGenerator, Chatbot, FAQ, Community
+  TemplateGenerator, Chatbot, FAQ, Community, CompleteProfile
 } from './pages';
 
 function App() {
@@ -32,6 +32,7 @@ function App() {
               <Route path="/chatbot" element={<ProtectedRoute><Chatbot /></ProtectedRoute>} />
               <Route path="/community" element={<ProtectedRoute><Community /></ProtectedRoute>} />
               <Route path="/faq" element={<ProtectedRoute><FAQ /></ProtectedRoute>} />
+              <Route path="/complete-profile" element={<ProtectedRoute><CompleteProfile /></ProtectedRoute>} />
 
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>

@@ -1,10 +1,12 @@
 import React from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { User, Shield, Calendar, Clock } from 'lucide-react';
 
 const UserDashboard = () => {
-    const { user } = useAuth();
+    const { user, profile, emergencyContact } = useAuth();
+    const navigate = useNavigate();
 
     if (!user) {
         return (
@@ -25,17 +27,31 @@ const UserDashboard = () => {
         });
     };
 
-    const meta = user.user_metadata || {};
+    // Prefer profile data from DB, fallback to metadata
+    const displayName = profile?.name || user.user_metadata?.full_name || 'User';
+    const displayPhone = profile?.phone || user.user_metadata?.phone || 'N/A';
+
+    // Use the fetched emergency contact object
+    const displayEmergency = emergencyContact?.phone_number || emergencyContact?.contact_name || user.user_metadata?.emergency_contact || 'None Set';
+    const displayAddress = user.user_metadata?.address || 'N/A';
 
     return (
         <div className="container mx-auto px-4 py-12 max-w-4xl">
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="mb-8"
+                className="mb-8 flex justify-between items-end"
             >
-                <h1 className="text-3xl font-bold text-slate-900 mb-2">User Dashboard</h1>
-                <p className="text-slate-500">Manage your profile and account settings.</p>
+                <div>
+                    <h1 className="text-3xl font-bold text-slate-900 mb-2">User Dashboard</h1>
+                    <p className="text-slate-500">Manage your profile and account settings.</p>
+                </div>
+                <button
+                    onClick={() => navigate('/complete-profile')}
+                    className="btn btn-outline border-indigo-200 text-indigo-600 hover:bg-indigo-50"
+                >
+                    Edit Profile
+                </button>
             </motion.div>
 
             <motion.div
@@ -50,7 +66,7 @@ const UserDashboard = () => {
                     </div>
                     <div>
                         <h2 className="text-2xl font-bold text-slate-900">
-                            Welcome, {meta.full_name || 'User'}!
+                            Welcome, {displayName}!
                         </h2>
                         <p className="text-slate-500 text-sm">{user.email}</p>
                     </div>
@@ -71,19 +87,19 @@ const UserDashboard = () => {
                             <div>
                                 <label className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Emergency Contact</label>
                                 <div className="text-red-500 font-bold text-lg">
-                                    {meta.emergency_contact || 'None Set'}
+                                    {displayEmergency}
                                 </div>
                             </div>
                             <div>
                                 <label className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Phone Number</label>
                                 <div className="text-slate-900 font-medium">
-                                    {meta.phone || 'N/A'}
+                                    {displayPhone}
                                 </div>
                             </div>
                             <div className="md:col-span-2">
                                 <label className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Address</label>
                                 <div className="text-slate-900 font-medium whitespace-pre-wrap">
-                                    {meta.address || 'N/A'}
+                                    {displayAddress}
                                 </div>
                             </div>
                         </div>

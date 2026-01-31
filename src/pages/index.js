@@ -6,6 +6,7 @@ export { default as MediaCheck } from './MediaCheck';
 export { default as TemplateGenerator } from './TemplateGenerator';
 export { default as Chatbot } from './Chatbot';
 export { default as FAQ } from './FAQ';
+export { default as CompleteProfile } from './CompleteProfile';
 export { default as Community } from './Community';
 export { default as Login } from './Auth/Login';
 export { default as Signup } from './Auth/Signup';

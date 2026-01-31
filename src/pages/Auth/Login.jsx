@@ -98,7 +98,7 @@ const Login = () => {
                         disabled={loading}
                         className="btn btn-primary w-full shadow-lg shadow-indigo-200"
                     >
-                        {loading ? 'Signing In...' : 'Sign In'}
+                        {loading ? 'Logging In...' : 'Login'}
                     </button>
 
                     {!supabaseConnected && (
