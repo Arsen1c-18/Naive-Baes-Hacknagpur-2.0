@@ -1,9 +1,32 @@
+from pipelines.ocr_pipeline import analyze_screenshot
+from pipelines.text_pipeline import analyze_text
+# from pipelines.voice_pipeline import analyze_voice
+
 from rag_template.rag_retriever import get_template
 from rag_template.rag_generator import generate_report
 
 
 def main():
-    print("\nDescribe what happened:\n")
+    # ------------------ DETECTION DEMO (OG PART) ------------------
+
+    print("\n--- TEXT TEST ---")
+    msg = "Aapka bank account turant block ho jayega, link par click karo"
+    print(analyze_text(msg))
+
+    print("\n--- SAFE TEXT TEST ---")
+    msg2 = "Hi, I recently bought a device and would like a refund"
+    print(analyze_text(msg2))
+
+    print("\n--- SCREENSHOT TEST ---")
+    # Ensure sample_ss.png exists
+    print(analyze_screenshot("sample_ss.png"))
+
+    # print("\n--- VOICE TEST ---")
+    # print(analyze_voice("sample.wav"))
+
+    # ------------------ COPY-PASTE COMPLAINT GENERATION ------------------
+
+    print("\nDescribe what happened (this will be converted into a complaint):\n")
     incident_text = input("> ")
 
     print("\nSelect complaint type:\n")

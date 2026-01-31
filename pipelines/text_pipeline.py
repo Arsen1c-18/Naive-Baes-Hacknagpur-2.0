@@ -1,6 +1,7 @@
 from hf_client import hf_zero_shot_classify
 from labels import SCAM_LABELS
 from rule_engine import rule_based_detect
+from llm_wrapper import generate_risk_analysis
 
 
 # 🔴 Risk threshold logic (moved here)
@@ -38,5 +39,6 @@ def analyze_text(text: str):
         "risk_level": get_risk_level(confidence),
         "confidence": round(confidence, 3),
         "rules_triggered": rule_hits,
-        "decision_source": source
+        "decision_source": source,
+        "analysis": generate_risk_analysis(text, final_label, get_risk_level(confidence))
     }
