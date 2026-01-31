@@ -4,3 +4,11 @@ faster-whisper
 pytesseract
 Pillow
 easyocr
+python-dotenv
+twilio
+supabase
+fastapi
+groq
+uvicorn
+httpx
+python-multipart

@@ -4,8 +4,8 @@ from supabase import create_client
 from fastapi import HTTPException
 
 supabase = create_client(
-    os.environ["https://cpffgmoewzoielduqolx.supabase.co/"],
-    os.environ["eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNwZmZnbW9ld3pvaWVsZHVxb2x4Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2OTg0NTIyMCwiZXhwIjoyMDg1NDIxMjIwfQ.RnjV7wuLHGO-LfHJrnrOM315QXFC--Jwpd7bCXAI_gw"]
+    os.environ["SUPABASE_URL"],
+    os.environ["SUPABASE_KEY"]
 )
 
 twilio = Client(
@@ -26,10 +26,10 @@ def verify_user(access_token: str):
     return user
 
 
-def send_alert(tonumber: str, message: str):
+def send_alert(to_number: str, message: str):
     twilio.messages.create(
         body=message,
-        from=FROM_NUMBER,
+        from_=FROM_NUMBER,
         to=to_number
     )
 
