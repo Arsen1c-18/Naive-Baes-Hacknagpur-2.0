@@ -33,7 +33,6 @@ const UserDashboard = () => {
 
     // Use the fetched emergency contact object
     const displayEmergency = emergencyContact?.phone_number || emergencyContact?.contact_name || user.user_metadata?.emergency_contact || 'None Set';
-    const displayAddress = user.user_metadata?.address || 'N/A';
 
     return (
         <div className="container mx-auto px-4 py-12 max-w-4xl">
@@ -94,12 +93,6 @@ const UserDashboard = () => {
                                 <label className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Phone Number</label>
                                 <div className="text-slate-900 font-medium">
                                     {displayPhone}
-                                </div>
-                            </div>
-                            <div className="md:col-span-2">
-                                <label className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Address</label>
-                                <div className="text-slate-900 font-medium whitespace-pre-wrap">
-                                    {displayAddress}
                                 </div>
                             </div>
                         </div>

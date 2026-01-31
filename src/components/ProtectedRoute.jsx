@@ -3,11 +3,16 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 const ProtectedRoute = ({ children }) => {
-    const { user, profile, supabaseConnected } = useAuth();
+    const { user, profile, supabaseConnected, profileLoading } = useAuth();
     const location = useLocation();
 
     if (!user) {
         return <Navigate to="/login" replace />;
+    }
+
+    // Wait for the profile to finish loading before making decisions
+    if (supabaseConnected && profileLoading) {
+        return <div className="min-h-screen flex items-center justify-center bg-bg text-indigo-600">Loading Profile...</div>;
     }
 
     // Profile Completion Check
@@ -15,12 +20,6 @@ const ProtectedRoute = ({ children }) => {
     // AND we are not already on the completion page...
     // THEN redirect to /complete-profile
     if (supabaseConnected && !profile && location.pathname !== '/complete-profile') {
-        // We might want to give it a second to load? 
-        // For MVP, relying on the fact that profile fetch happens fast or 'profile' is null initially.
-        // Issue: 'profile' is null while loading. We need a loading state for profile?
-        // Let's assume strictness for now. 
-        // Better: Check if we have *attempted* to load it. 
-        // For now, let's just checking if we are on a "content" page.
         return <Navigate to="/complete-profile" replace />;
     }
 

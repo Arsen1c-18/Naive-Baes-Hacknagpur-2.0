@@ -111,8 +111,7 @@ export const AuthProvider = ({ children }) => {
             user_metadata: {
                 full_name: 'Demo User',
                 phone: '9876543210',
-                emergency_contact: '112',
-                address: '123 Safety St, Secure City'
+                emergency_contact: '112'
             }
         });
         setEmergencyContact({ phone_number: '112', contact_name: 'Emergency Services' });

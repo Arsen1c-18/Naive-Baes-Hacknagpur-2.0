@@ -13,8 +13,7 @@ const CompleteProfile = () => {
     const [formData, setFormData] = useState({
         fullName: '',
         phone: '',
-        emergencyContact: '',
-        address: ''
+        emergencyContact: ''
     });
 
     useEffect(() => {
@@ -32,8 +31,7 @@ const CompleteProfile = () => {
                 ...prev,
                 fullName: prev.fullName || user.user_metadata.full_name || '',
                 phone: prev.phone || user.user_metadata.phone || '',
-                emergencyContact: prev.emergencyContact || user.user_metadata.emergency_contact || '',
-                address: prev.address || user.user_metadata.address || ''
+                emergencyContact: prev.emergencyContact || user.user_metadata.emergency_contact || ''
             }));
         }
     }, [user, profile]);
@@ -164,23 +162,6 @@ const CompleteProfile = () => {
                                 className="input pl-10 border-red-100 focus:border-red-500 focus:ring-red-200"
                                 placeholder="Emergency Number"
                                 value={formData.emergencyContact}
-                                onChange={handleChange}
-                            />
-                        </div>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1">Address</label>
-                        <div className="relative">
-                            <div className="absolute inset-y-0 left-0 pl-3 pt-3 pointer-events-none">
-                                <MapPin className="h-4 w-4 text-slate-400" />
-                            </div>
-                            <textarea
-                                name="address"
-                                required
-                                className="input pl-10 min-h-[80px]"
-                                placeholder="Your address..."
-                                value={formData.address}
                                 onChange={handleChange}
                             />
                         </div>
