@@ -2,12 +2,12 @@ from pipelines.ocr_pipeline import analyze_screenshot
 from pipelines.text_pipeline import analyze_text
 # from pipelines.voice_pipeline import analyze_voice
 
+from alerts.twilio_alert import trigger_critical_alerts
 from rag_template.rag_retriever import get_template
 from rag_template.rag_generator import generate_report
 
 
 def main():
-    # ------------------ DETECTION DEMO (OG PART) ------------------
 
     print("\n--- TEXT TEST ---")
     msg = "Aapka bank account turant block ho jayega, link par click karo"
@@ -24,10 +24,17 @@ def main():
     # print("\n--- VOICE TEST ---")
     # print(analyze_voice("sample.wav"))
 
-    # ------------------ COPY-PASTE COMPLAINT GENERATION ------------------
-
     print("\nDescribe what happened (this will be converted into a complaint):\n")
     incident_text = input("> ")
+
+    detection_result = analyze_text(incident_text)
+    print("\n--- DETECTION RESULT ---")
+    print(detection_result)
+
+    if detection_result.get("confidence", 0) >= 0.9:
+        print("\n CRTICAL RISK (confidence ≥ 0.9)")
+        print("Triggering emergency alerts via Twilio...")
+        trigger_critical_alerts(incident_text)
 
     print("\nSelect complaint type:\n")
     print("1. Cybercrime Complaint")
