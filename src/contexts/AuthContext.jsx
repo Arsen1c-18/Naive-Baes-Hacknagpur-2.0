@@ -45,6 +45,17 @@ export const AuthProvider = ({ children }) => {
         return await supabase.auth.signOut();
     };
 
+    const signInWithGoogle = async () => {
+        if (!supabase) return { error: { message: "Supabase not configured" } };
+        const { data, error } = await supabase.auth.signInWithOAuth({
+            provider: 'google',
+            options: {
+                redirectTo: window.location.origin,
+            }
+        });
+        return { data, error };
+    };
+
     // Mock login for MVP if Supabase is missing
     const mockLogin = () => {
         setUser({ id: 'mock-user-id', email: 'user@example.com' });
@@ -54,6 +65,7 @@ export const AuthProvider = ({ children }) => {
         user,
         signUp,
         signIn,
+        signInWithGoogle,
         signOut,
         mockLogin, // Exposed for demo purposes
         supabaseConnected: !!supabase
