@@ -19,6 +19,7 @@ from pipelines.text_pipeline import analyze_text
 from pipelines.voice_pipeline import analyze_voice
 from rag_template.rag_retriever import get_template
 from rag_template.rag_generator import generate_report
+from pipelines.safety_chat import SafetyChat
 
 # Handle broken module gracefully
 try:
@@ -30,6 +31,9 @@ except ImportError:
     trigger_critical_alerts = None
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+# Initialize Chatbot
+safety_chat_bot = SafetyChat()
 
 app = FastAPI(title="Naive-Baes-Hacknagpur-2.0 Backend")
 
@@ -63,6 +67,9 @@ class AlertRequest(BaseModel):
     incident_text: str
     emergency_contact: Optional[str] = None
     location: str = "India"
+
+class ChatRequest(BaseModel):
+    message: str
 
 # Endpoints
 
@@ -154,6 +161,14 @@ def api_trigger_alert(request: AlertRequest, token: str = Depends(oauth2_scheme)
         raise he
     except requests.RequestException:
         raise HTTPException(status_code=502, detail="External service (Supabase/Twilio) unreachable")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/chat/safety")
+def api_safety_chat(request: ChatRequest):
+    try:
+        response = safety_chat_bot.get_response(request.message)
+        return {"response": response}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
