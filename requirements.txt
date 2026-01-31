@@ -1,0 +1,6 @@
+requests
+langdetect
+faster-whisper
+pytesseract
+Pillow
+easyocr
