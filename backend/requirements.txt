@@ -1,7 +1,5 @@
 requests
-langdetect
 faster-whisper
-pytesseract
 Pillow
 easyocr
 python-dotenv
@@ -12,3 +10,4 @@ groq
 uvicorn
 httpx
 python-multipart
+pydantic
