@@ -6,7 +6,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Auth/Login';
 import Signup from './pages/Auth/Signup';
 import {
-  Dashboard, SpamCheck, TextCheck, MediaCheck,
+  Home, UserDashboard, SpamCheck, TextCheck, MediaCheck,
   TemplateGenerator, Chatbot, FAQ, Community
 } from './pages';
 
@@ -22,7 +22,8 @@ function App() {
               <Route path="/signup" element={<Signup />} />
 
               {/* Protected Routes */}
-              <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+              <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+              <Route path="/dashboard" element={<ProtectedRoute><UserDashboard /></ProtectedRoute>} />
               <Route path="/spam-check" element={<ProtectedRoute><SpamCheck /></ProtectedRoute>} />
               <Route path="/text-check" element={<ProtectedRoute><TextCheck /></ProtectedRoute>} />
               <Route path="/media-check" element={<ProtectedRoute><MediaCheck /></ProtectedRoute>} />

@@ -28,7 +28,8 @@ const Navbar = () => {
 
                 {/* Desktop Nav */}
                 <div className="hidden md:flex gap-4 items-center">
-                    <Link to="/" className={`nav-link ${isActive('/')}`}>Dashboard</Link>
+                    <Link to="/" className={`nav-link ${isActive('/')}`}>Home</Link>
+                    <Link to="/dashboard" className={`nav-link ${isActive('/dashboard')}`}>Dashboard</Link>
                     <Link to="/spam-check" className={`nav-link ${isActive('/spam-check')}`}>Spam</Link>
                     <Link to="/text-check" className={`nav-link ${isActive('/text-check')}`}>Text</Link>
                     <Link to="/media-check" className={`nav-link ${isActive('/media-check')}`}>Media</Link>
@@ -51,7 +52,8 @@ const Navbar = () => {
                         className="md:hidden bg-surface border-b border-surface-border overflow-hidden"
                     >
                         <div className="flex flex-col p-4 gap-2">
-                            <Link to="/" onClick={() => setIsOpen(false)} className="nav-link block">Dashboard</Link>
+                            <Link to="/" onClick={() => setIsOpen(false)} className="nav-link block">Home</Link>
+                            <Link to="/dashboard" onClick={() => setIsOpen(false)} className="nav-link block">Dashboard</Link>
                             <Link to="/spam-check" onClick={() => setIsOpen(false)} className="nav-link block">Spam Check</Link>
                             <Link to="/text-check" onClick={() => setIsOpen(false)} className="nav-link block">Text Analysis</Link>
                             <Link to="/media-check" onClick={() => setIsOpen(false)} className="nav-link block">Media Guard</Link>

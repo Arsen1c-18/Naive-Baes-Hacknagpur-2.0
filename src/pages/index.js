@@ -1,4 +1,5 @@
-export { default as Dashboard } from './Dashboard';
+export { default as Home } from './Home';
+export { default as UserDashboard } from './UserDashboard';
 export { default as SpamCheck } from './SpamCheck';
 export { default as TextCheck } from './TextCheck';
 export { default as MediaCheck } from './MediaCheck';

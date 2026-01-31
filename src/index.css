@@ -3,20 +3,41 @@
 @tailwind utilities;
 
 @layer base {
-  body {
-    @apply bg-bg text-gray-100 font-sans antialiased min-h-screen;
-    background-color: #050507;
-    /* Fallback */
+  :root {
+    /* Light Mode Palette - Vibrant & Professional */
+    --bg: 238 242 255;
+    /* Indigo 50 - Cool, vibrant tint */
+    --surface: 255 255 255;
+    --surface-border: 226 232 240;
+    /* Slate 200 */
+    --primary: 79 70 229;
+    /* Indigo 600 - Dynamic professional blue/purple */
+    --primary-glow: 99 102 241;
+    /* Indigo 500 */
+    /* Used with opacity usually */
+    --accent: 147 51 234;
+    /* Purple 600 - Rich vibrant accent */
+    --success: 5 150 105;
+    /* Emerald 600 - Darker/Rich green */
+    --danger: 220 38 38;
+    /* Red 600 - Richer red */
+    --warning: 217 119 6;
+    /* Amber 600 - Richer orange */
   }
 
-  /* Reset for consistent dark mode headers */
+  body {
+    @apply bg-bg text-slate-800 font-sans antialiased min-h-screen;
+    background-color: rgb(var(--bg));
+  }
+
+  /* Reset for consistent headers */
   h1,
   h2,
   h3,
   h4,
   h5,
   h6 {
-    @apply font-bold text-white;
+    @apply font-bold text-slate-900;
   }
 }
 
@@ -26,7 +47,7 @@
   }
 
   .btn-primary {
-    @apply bg-gradient-to-r from-primary to-accent text-white shadow-lg shadow-blue-500/20 hover:opacity-90 hover:-translate-y-px;
+    @apply bg-gradient-to-r from-primary to-accent text-white shadow-lg shadow-indigo-500/30 hover:opacity-90 hover:-translate-y-px;
   }
 
   .btn-danger {
@@ -34,34 +55,34 @@
   }
 
   .btn-outline {
-    @apply bg-transparent border border-surface-border text-gray-200 hover:bg-surface-border;
+    @apply bg-transparent border border-gray-300 text-slate-700 hover:bg-white hover:border-primary hover:text-primary transition-colors;
   }
 
   /* Emergency Button Variant - High visibility pulse */
   .btn-emergency {
-    @apply bg-red-600 text-white font-bold uppercase tracking-wider shadow-lg shadow-red-500/60 animate-pulse hover:animate-none hover:bg-red-700 hover:scale-105;
+    @apply bg-gradient-to-r from-red-600 to-rose-600 text-white font-bold uppercase tracking-wider shadow-lg shadow-red-500/40 animate-pulse hover:animate-none hover:scale-105;
   }
 
   .card {
-    @apply bg-surface/70 backdrop-blur-md border border-surface-border rounded-2xl p-6 shadow-xl;
+    @apply bg-white border border-indigo-100 rounded-2xl p-6 shadow-soft-indigo hover:shadow-soft-indigo-hover transition-shadow duration-300;
   }
 
   .input,
   .textarea,
   .select {
-    @apply w-full bg-[#0a0a0f] border border-surface-border text-white p-3 rounded-lg text-base transition-colors focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20;
+    @apply w-full bg-slate-50 border border-slate-200 text-slate-900 p-3 rounded-xl text-base transition-all focus:bg-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20;
   }
 
   .nav-link {
-    @apply text-gray-400 no-underline p-2 transition-colors hover:text-white;
+    @apply text-slate-500 no-underline p-2 transition-colors hover:text-primary font-medium;
   }
 
   .nav-link.active {
-    @apply text-white font-medium;
+    @apply text-primary font-bold;
   }
 
   .hero-text {
-    @apply text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-indigo-300 mb-4;
+    @apply text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent mb-4 drop-shadow-sm pb-2 leading-tight;
   }
 }
 
@@ -71,14 +92,14 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #050507;
+  background: rgb(var(--bg));
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #2b2b3b;
+  background: #cbd5e1;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #3b3b4b;
+  background: #94a3b8;
 }

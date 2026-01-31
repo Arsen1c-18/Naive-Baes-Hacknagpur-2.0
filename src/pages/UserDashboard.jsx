@@ -1,0 +1,102 @@
+import React from 'react';
+import { useAuth } from '../contexts/AuthContext';
+import { motion } from 'framer-motion';
+import { User, Mail, Shield, Calendar, Clock } from 'lucide-react';
+
+const UserDashboard = () => {
+    const { user } = useAuth();
+
+    if (!user) {
+        return (
+            <div className="container mx-auto px-4 py-12 text-center text-slate-500">
+                Please log in to view your dashboard.
+            </div>
+        );
+    }
+
+    const formatDate = (dateString) => {
+        if (!dateString) return 'N/A';
+        return new Date(dateString).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    };
+
+    return (
+        <div className="container mx-auto px-4 py-12 max-w-4xl">
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-8"
+            >
+                <h1 className="text-3xl font-bold text-slate-900 mb-2">User Dashboard</h1>
+                <p className="text-slate-500">Manage your profile and account settings.</p>
+            </motion.div>
+
+            <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.1 }}
+                className="card bg-white p-8 rounded-2xl shadow-soft-indigo border border-indigo-100"
+            >
+                <div className="flex items-center gap-6 mb-8 border-b border-slate-100 pb-8">
+                    <div className="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600">
+                        <User size={40} />
+                    </div>
+                    <div>
+                        <h2 className="text-2xl font-bold text-slate-900">Welcome back!</h2>
+                        <p className="text-slate-500 text-sm">{user.email}</p>
+                    </div>
+                    <div className="ml-auto">
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 border border-green-200">
+                            <Shield size={12} className="mr-1" /> Verified Account
+                        </span>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                        <div className="flex items-center gap-3 mb-2 text-slate-500 text-sm font-medium uppercase tracking-wider">
+                            <Mail size={16} /> Email Address
+                        </div>
+                        <div className="text-slate-900 font-medium text-lg truncate">
+                            {user.email}
+                        </div>
+                    </div>
+
+                    <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                        <div className="flex items-center gap-3 mb-2 text-slate-500 text-sm font-medium uppercase tracking-wider">
+                            <Shield size={16} /> User ID
+                        </div>
+                        <div className="text-slate-900 font-mono text-sm break-all">
+                            {user.id}
+                        </div>
+                    </div>
+
+                    <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                        <div className="flex items-center gap-3 mb-2 text-slate-500 text-sm font-medium uppercase tracking-wider">
+                            <Calendar size={16} /> Account Created
+                        </div>
+                        <div className="text-slate-900 font-medium">
+                            {formatDate(user.created_at)}
+                        </div>
+                    </div>
+
+                    <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                        <div className="flex items-center gap-3 mb-2 text-slate-500 text-sm font-medium uppercase tracking-wider">
+                            <Clock size={16} /> Last Login
+                        </div>
+                        <div className="text-slate-900 font-medium">
+                            {formatDate(user.last_sign_in_at)}
+                        </div>
+                    </div>
+                </div>
+            </motion.div>
+        </div>
+    );
+};
+
+export default UserDashboard;

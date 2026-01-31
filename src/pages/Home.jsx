@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Shield, MessageSquare, Image, FileText, Users, Cpu } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const Dashboard = () => {
+const Home = () => {
     const tools = [
         { title: "Spam Detector", icon: <Shield size={32} className="text-red-300" />, desc: "Check messages for spam & scams.", link: "/spam-check", color: "bg-red-500/10", border: "hover:border-red-500/50" },
         { title: "Text Analysis", icon: <MessageSquare size={32} className="text-blue-300" />, desc: "Analyze text for harassment/threats.", link: "/text-check", color: "bg-blue-500/10", border: "hover:border-blue-500/50" },
@@ -56,4 +56,4 @@ const Dashboard = () => {
     );
 };
 
-export default Dashboard;
+export default Home;

@@ -7,15 +7,15 @@ export default {
     theme: {
         extend: {
             colors: {
-                bg: "#050507",
-                surface: "#0f0f16",
-                "surface-border": "#1f1f2e",
-                primary: "#3b82f6", // Blue 500
-                "primary-glow": "rgba(59, 130, 246, 0.5)",
-                accent: "#8b5cf6", // Violet 500
-                success: "#10b981",
-                danger: "#ef4444",
-                warning: "#f59e0b",
+                bg: "rgb(var(--bg) / <alpha-value>)",
+                surface: "rgb(var(--surface) / <alpha-value>)",
+                "surface-border": "rgb(var(--surface-border) / <alpha-value>)",
+                primary: "rgb(var(--primary) / <alpha-value>)",
+                "primary-glow": "rgb(var(--primary-glow) / 0.5)", // Fixed opacity for glow
+                accent: "rgb(var(--accent) / <alpha-value>)",
+                success: "rgb(var(--success) / <alpha-value>)",
+                danger: "rgb(var(--danger) / <alpha-value>)",
+                warning: "rgb(var(--warning) / <alpha-value>)",
             },
             fontFamily: {
                 sans: ['Inter', 'system-ui', 'sans-serif'],
@@ -29,6 +29,10 @@ export default {
                     '0%': { opacity: '0', transform: 'translateY(10px)' },
                     '100%': { opacity: '1', transform: 'translateY(0)' },
                 }
+            },
+            boxShadow: {
+                'soft-indigo': '0 4px 20px -4px rgba(99, 102, 241, 0.1)',
+                'soft-indigo-hover': '0 8px 30px -4px rgba(99, 102, 241, 0.2)',
             }
         },
     },
