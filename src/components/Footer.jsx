@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Shield, Github, Twitter, Mail } from 'lucide-react';
+import { Shield } from 'lucide-react';
 
 const Footer = () => {
     return (
@@ -41,11 +41,6 @@ const Footer = () => {
                     <p className="text-slate-400 text-sm">
                         © {new Date().getFullYear()} Digital Safety Companion. All rights reserved.
                     </p>
-                    <div className="flex gap-4">
-                        <a href="#" className="text-slate-400 hover:text-primary transition-colors"><Github size={20} /></a>
-                        <a href="#" className="text-slate-400 hover:text-primary transition-colors"><Twitter size={20} /></a>
-                        <a href="#" className="text-slate-400 hover:text-primary transition-colors"><Mail size={20} /></a>
-                    </div>
                 </div>
             </div>
         </footer>

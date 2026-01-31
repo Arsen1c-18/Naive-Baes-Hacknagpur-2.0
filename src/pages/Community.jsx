@@ -3,6 +3,7 @@ import PageShell from '../components/PageShell';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { MessageSquare, ThumbsUp, AlertCircle, Plus } from 'lucide-react';
+import FAQSection from '../components/FAQSection';
 
 const MOCK_POSTS = [
     { id: 1, user: 'secure_user_1', content: 'Watch out for a new SMS scam asking for electricity bill payment!', type: 'Alert', likes: 12, date: '2023-10-24' },
@@ -134,6 +135,9 @@ const Community = () => {
                         </div>
                     ))}
                 </div>
+
+                <div className="my-12 border-t border-slate-200"></div>
+                <FAQSection />
             </div>
         </PageShell>
     );

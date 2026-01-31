@@ -35,19 +35,19 @@ const Navbar = () => {
                 </Link>
 
                 {/* Mobile Menu Toggle */}
-                <button className="md:hidden p-2 text-indigo-100 hover:text-white" onClick={() => setIsOpen(!isOpen)}>
+                <button className="md:hidden p-2 text-cyan-50 hover:text-white" onClick={() => setIsOpen(!isOpen)}>
                     {isOpen ? <X /> : <Menu />}
                 </button>
 
                 {/* Desktop Nav */}
                 <div className="hidden md:flex gap-4 items-center">
-                    <Link to="/" className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${location.pathname === '/' ? 'bg-white/20 text-white shadow-sm' : 'text-indigo-100 hover:bg-white/10 hover:text-white'}`}>Home</Link>
-                    <Link to="/dashboard" className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${location.pathname === '/dashboard' ? 'bg-white/20 text-white shadow-sm' : 'text-indigo-100 hover:bg-white/10 hover:text-white'}`}>Dashboard</Link>
-                    <Link to="/spam-check" className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${location.pathname === '/spam-check' ? 'bg-white/20 text-white shadow-sm' : 'text-indigo-100 hover:bg-white/10 hover:text-white'}`}>Spam</Link>
-                    <Link to="/text-check" className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${location.pathname === '/text-check' ? 'bg-white/20 text-white shadow-sm' : 'text-indigo-100 hover:bg-white/10 hover:text-white'}`}>Text</Link>
-                    <Link to="/media-check" className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${location.pathname === '/media-check' ? 'bg-white/20 text-white shadow-sm' : 'text-indigo-100 hover:bg-white/10 hover:text-white'}`}>Media</Link>
-                    <Link to="/templates" className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${location.pathname === '/templates' ? 'bg-white/20 text-white shadow-sm' : 'text-indigo-100 hover:bg-white/10 hover:text-white'}`}>Templates</Link>
-                    <Link to="/community" className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${location.pathname === '/community' ? 'bg-white/20 text-white shadow-sm' : 'text-indigo-100 hover:bg-white/10 hover:text-white'}`}>Community</Link>
+                    <Link to="/" className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${location.pathname === '/' ? 'bg-white/20 text-white shadow-sm' : 'text-cyan-50 hover:bg-white/10 hover:text-white'}`}>Home</Link>
+                    <Link to="/dashboard" className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${location.pathname === '/dashboard' ? 'bg-white/20 text-white shadow-sm' : 'text-cyan-50 hover:bg-white/10 hover:text-white'}`}>Dashboard</Link>
+                    <Link to="/spam-check" className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${location.pathname === '/spam-check' ? 'bg-white/20 text-white shadow-sm' : 'text-cyan-50 hover:bg-white/10 hover:text-white'}`}>Spam</Link>
+                    <Link to="/text-check" className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${location.pathname === '/text-check' ? 'bg-white/20 text-white shadow-sm' : 'text-cyan-50 hover:bg-white/10 hover:text-white'}`}>Text</Link>
+                    <Link to="/media-check" className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${location.pathname === '/media-check' ? 'bg-white/20 text-white shadow-sm' : 'text-cyan-50 hover:bg-white/10 hover:text-white'}`}>Media</Link>
+                    <Link to="/templates" className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${location.pathname === '/templates' ? 'bg-white/20 text-white shadow-sm' : 'text-cyan-50 hover:bg-white/10 hover:text-white'}`}>Templates</Link>
+                    <Link to="/community" className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${location.pathname === '/community' ? 'bg-white/20 text-white shadow-sm' : 'text-cyan-50 hover:bg-white/10 hover:text-white'}`}>Community</Link>
                     <button onClick={handleSOS} className="btn bg-red-600 hover:bg-red-700 text-white px-3 py-1 text-sm font-bold shadow-lg shadow-red-500/30 animate-pulse">
                         SOS
                     </button>

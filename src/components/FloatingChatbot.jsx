@@ -54,17 +54,17 @@ const FloatingChatbot = () => {
                         initial={{ opacity: 0, y: 20, scale: 0.9, height: 0 }}
                         animate={{ opacity: 1, y: 0, scale: 1, height: '500px' }}
                         exit={{ opacity: 0, y: 20, scale: 0.9, height: 0 }}
-                        className="pointer-events-auto bg-white w-[350px] md:w-[400px] rounded-2xl shadow-2xl border border-indigo-100 overflow-hidden flex flex-col"
+                        className="pointer-events-auto bg-white w-[90vw] md:w-[400px] rounded-2xl shadow-2xl border border-cyan-100 overflow-hidden flex flex-col"
                     >
                         {/* Header */}
-                        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-4 flex items-center justify-between text-white shrink-0">
+                        <div className="bg-gradient-to-r from-cyan-600 to-blue-600 p-4 flex items-center justify-between text-white shrink-0">
                             <div className="flex items-center gap-2">
                                 <div className="p-1.5 bg-white/20 rounded-lg">
                                     <Bot size={20} className="text-white" />
                                 </div>
                                 <div>
                                     <h3 className="font-bold text-sm">Safety Assistant</h3>
-                                    <p className="text-xs text-indigo-100 flex items-center gap-1">
+                                    <p className="text-xs text-cyan-50 flex items-center gap-1">
                                         <span className="w-1.5 h-1.5 bg-green-400 rounded-full"></span> Online
                                     </p>
                                 </div>
@@ -87,7 +87,7 @@ const FloatingChatbot = () => {
                                     className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                                 >
                                     <div className={`max-w-[85%] p-3 rounded-2xl text-sm leading-relaxed ${msg.sender === 'user'
-                                        ? 'bg-indigo-600 text-white rounded-tr-none'
+                                        ? 'bg-cyan-600 text-white rounded-tr-none'
                                         : 'bg-white text-slate-700 border border-slate-100 shadow-sm rounded-tl-none'
                                         }`}>
                                         {msg.text}
@@ -98,9 +98,9 @@ const FloatingChatbot = () => {
                                 <div className="flex justify-start">
                                     <div className="bg-white border border-slate-100 rounded-2xl rounded-tl-none p-3 shadow-sm">
                                         <div className="flex gap-1">
-                                            <span className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-bounce"></span>
-                                            <span className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-bounce delay-75"></span>
-                                            <span className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-bounce delay-150"></span>
+                                            <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-bounce"></span>
+                                            <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-bounce delay-75"></span>
+                                            <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-bounce delay-150"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -115,12 +115,12 @@ const FloatingChatbot = () => {
                                     value={input}
                                     onChange={(e) => setInput(e.target.value)}
                                     placeholder="Type a message..."
-                                    className="w-full bg-slate-50 border-none rounded-full pl-4 pr-12 py-3 focus:ring-2 focus:ring-indigo-100 text-sm font-medium text-slate-700 focus:bg-white transition-all outline-none"
+                                    className="w-full bg-slate-50 border-none rounded-full pl-4 pr-12 py-3 focus:ring-2 focus:ring-cyan-100 text-sm font-medium text-slate-700 focus:bg-white transition-all outline-none"
                                 />
                                 <button
                                     type="submit"
                                     disabled={!input.trim()}
-                                    className="absolute right-1 top-1/2 -translate-y-1/2 p-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 disabled:opacity-50 disabled:hover:bg-indigo-600 transition-all shadow-md active:scale-95"
+                                    className="absolute right-1 top-1/2 -translate-y-1/2 p-2 bg-cyan-600 text-white rounded-full hover:bg-cyan-700 disabled:opacity-50 disabled:hover:bg-cyan-600 transition-all shadow-md active:scale-95"
                                 >
                                     <Send size={16} />
                                 </button>
@@ -135,10 +135,13 @@ const FloatingChatbot = () => {
                 layout
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => navigate('/chatbot')}
-                className="fixed bottom-6 right-6 z-50 p-4 bg-gradient-to-r from-cyan-600 to-blue-600 text-white rounded-full shadow-lg shadow-cyan-500/40 hover:shadow-cyan-500/60 transition-all duration-300 group flex items-center justify-center"
+                onClick={() => setIsOpen(!isOpen)}
+                className={`pointer-events-auto p-4 rounded-full shadow-xl transition-all duration-300 flex items-center justify-center ${isOpen
+                    ? 'bg-slate-800 text-white rotate-180 hover:bg-slate-700'
+                    : 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white hover:shadow-cyan-500/40'
+                    }`}
             >
-                <MessageCircle size={32} />
+                {isOpen ? <X size={28} /> : <MessageCircle size={32} />}
             </motion.button>
         </div>
     );
