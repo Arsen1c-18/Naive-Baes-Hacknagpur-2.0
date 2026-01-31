@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
+import { useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext();
 
@@ -10,6 +11,7 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (!supabase) {
@@ -47,6 +49,16 @@ export const AuthProvider = ({ children }) => {
                     .maybeSingle();
 
                 if (profileData) setProfile(profileData);
+                else {
+                    // Check if user is trying to Login but has no profile (New User)
+                    const flow = sessionStorage.getItem('auth_flow');
+                    if (flow === 'login') {
+                        await signOut();
+                        // alert("Account does not exist with this email. Please Sign Up first.");
+                        navigate('/signup?message=Account+does+not+exist.+Please+Sign+Up');
+                        return;
+                    }
+                }
 
                 // Fetch Emergency Contact
                 const { data: contactData } = await supabase
@@ -120,8 +132,11 @@ export const AuthProvider = ({ children }) => {
         return await supabase.auth.signOut();
     };
 
-    const signInWithGoogle = async () => {
+    const signInWithGoogle = async (flow = 'signup') => {
         if (!supabase) return { error: { message: "Supabase not configured" } };
+
+        sessionStorage.setItem('auth_flow', flow);
+
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {

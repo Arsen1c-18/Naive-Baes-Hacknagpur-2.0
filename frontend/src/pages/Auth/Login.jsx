@@ -17,7 +17,7 @@ const Login = () => {
             alert('Supabase is not connected. Google Login cannot function in Mock Mode.');
             return;
         }
-        const { error } = await signInWithGoogle();
+        const { error } = await signInWithGoogle('login');
         if (error) setError(error.message);
     };
 

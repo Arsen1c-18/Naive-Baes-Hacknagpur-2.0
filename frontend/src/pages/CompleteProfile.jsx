@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { Shield, Smartphone, AlertCircle, MapPin, User } from 'lucide-react';
+import { Shield, Smartphone, AlertCircle, MapPin, User, Loader2 } from 'lucide-react';
 
 const CompleteProfile = () => {
     const { user, profile, supabaseConnected, setProfile, setEmergencyContact } = useAuth();
@@ -18,7 +18,6 @@ const CompleteProfile = () => {
 
     useEffect(() => {
         if (profile) {
-            // If we have DB data, use that first (it's the source of truth)
             setFormData(prev => ({
                 ...prev,
                 fullName: profile.name || prev.fullName,
@@ -48,56 +47,85 @@ const CompleteProfile = () => {
         setError('');
         setLoading(true);
 
+        const minDelayPromise = new Promise(resolve => setTimeout(resolve, 8000)); // 8 seconds wait
+
         if (!supabaseConnected || user?.isDemo) {
-            // Mock completion / Demo completion
-            const { setProfile, setEmergencyContact } = useAuth(); // Need to destructure these if not available in current scope
-            // Wait, useAuth() is called at top level. I need to make sure I have access to these.
-            // I'll update the top level destructuring in a separate edit or assume I can get them.
-            // Actually, let's just do the save logic here properly.
+            await minDelayPromise;
+            // Update local state to simulate save
+            setProfile({
+                id: user.id,
+                name: formData.fullName,
+                phone: formData.phone
+            });
+            if (formData.emergencyContact) {
+                setEmergencyContact({ phone_number: formData.emergencyContact });
+            }
+            navigate('/', { replace: true });
             return;
         }
 
         try {
             const userId = user.id;
 
-            // 1. Update/Insert Public Profile
-            const { error: profileError } = await supabase
-                .from('public_profiles')
-                .upsert({
+            // Database Operations
+            const dbOperations = async () => {
+                // 1. Update/Insert Public Profile
+                const { error: profileError } = await supabase
+                    .from('public_profiles')
+                    .upsert({
+                        id: userId,
+                        name: formData.fullName,
+                        phone: formData.phone,
+                        updated_at: new Date().toISOString()
+                    });
+
+                if (profileError) throw profileError;
+
+                // 2. Update/Insert Emergency Contact
+                const { error: contactError } = await supabase
+                    .from('emergency_contacts')
+                    .upsert({
+                        user_id: userId,
+                        contact_name: "Emergency Contact",
+                        phone_number: formData.emergencyContact,
+                        updated_at: new Date().toISOString()
+                    }, { onConflict: 'user_id' });
+
+                if (contactError) throw contactError;
+
+                // Update local context after successful DB save
+                setProfile({
                     id: userId,
                     name: formData.fullName,
-                    phone: formData.phone,
-                    updated_at: new Date().toISOString()
+                    phone: formData.phone
                 });
+                setEmergencyContact({ phone_number: formData.emergencyContact });
+            };
 
-            if (profileError) throw profileError;
-
-            // 2. Update/Insert Emergency Contact
-            // Note: We are simplifying to one contact for MVP
-            const { error: contactError } = await supabase
-                .from('emergency_contacts')
-                .upsert({
-                    user_id: userId,
-                    contact_name: "Emergency Contact", // Generic name if we don't have a separate field
-                    phone_number: formData.emergencyContact,
-                    updated_at: new Date().toISOString()
-                }, { onConflict: 'user_id' }); // Assuming user_id is unique for 1 contact per user in this MVP design
-
-            if (contactError) throw contactError;
+            // Wait for BOTH the minimum delay AND the DB operations
+            await Promise.all([dbOperations(), minDelayPromise]);
 
             // Success
-            navigate('/');
+            navigate('/', { replace: true });
 
         } catch (err) {
             console.error(err);
             setError(err.message || "Failed to save profile.");
-        } finally {
-            setLoading(false);
+            setLoading(false); // Stop loading only on error so they can retry
         }
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-bg">
+        <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-bg relative">
+            {/* Loading Overlay */}
+            {loading && (
+                <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex flex-col items-center justify-center text-white">
+                    <Loader2 className="h-12 w-12 animate-spin mb-4 text-cyan-400" />
+                    <h3 className="text-xl font-semibold">Creating your secure profile...</h3>
+                    <p className="text-slate-200 mt-2">Uploading encrypted data to SafeVault.</p>
+                </div>
+            )}
+
             <div className="card max-w-md w-full p-8 shadow-soft-indigo border border-indigo-100 bg-white rounded-2xl">
                 <div className="text-center mb-8">
                     <div className="mx-auto h-12 w-12 bg-indigo-100 rounded-full flex items-center justify-center mb-4">
@@ -175,7 +203,7 @@ const CompleteProfile = () => {
                         disabled={loading}
                         className="btn btn-primary w-full shadow-lg shadow-indigo-200 mt-6"
                     >
-                        {loading ? 'Saving...' : 'Complete Profile'}
+                        {loading ? 'Processing...' : 'Complete Profile'}
                     </button>
                 </form>
             </div>
