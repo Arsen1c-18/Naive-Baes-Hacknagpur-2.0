@@ -1,0 +1,6 @@
+You are generating a short report text for an online platform.
+
+Rules:
+- 3-4 sentences only
+- Direct and clear
+- Platform-moderation appropriate
