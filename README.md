@@ -1,4 +1,4 @@
-# 🛡️ Naïve Baes - Digital Safety Companion
+# 🛡️ Naive Baes - Digital Safety Companion
 
 > **HackNagpur 2.0 Project**  
 > *Empowering users against deepfakes, online harassment, and digital threats with AI.*
@@ -13,9 +13,9 @@
 
 ## 📖 Overview
 
-**Naïve Baes** is a comprehensive digital safety platform designed to be your personal guardian in the digital age. It leverages advanced AI to detect manipulated media and analyzes text for malicious intent, providing real-time protection and reporting tools.
+**Safety Companion** is a comprehensive digital safety platform designed to be your personal guardian in the digital age. It leverages advanced AI to detect manipulated media and analyzes text for malicious intent, providing real-time protection and reporting tools.
 
-Unlike standard safety apps, Naïve Baes uses a hybrid analysis approach—combining local, privacy-focused models (Whisper, EasyOCR) with powerful cloud LLMs (Llama 3 via Groq) for detailed explanations.
+Unlike standard safety apps,it uses a hybrid analysis approach—combining local, privacy-focused models (Whisper, EasyOCR) with powerful cloud LLMs (Llama 3 via Groq) for detailed explanations.
 
 ---
 
@@ -37,7 +37,8 @@ Naive-Baes-Hacknagpur-2.0/
 │   ├── rule_engine.py        # Static rule-based detection
 │   └── requirements.txt      # Python dependencies
 │
-└── frontend/                 # React + Vite Frontend
+└──
+frontend/                 # React + Vite Frontend
     ├── src/
     │   ├── components/       # Reusable UI components
     │   ├── contexts/         # React Context (Auth, etc.)
@@ -49,6 +50,7 @@ Naive-Baes-Hacknagpur-2.0/
     │   │   └── ...
     │   └── App.jsx           # Main Router
     └── package.json          # Node dependencies
+
 ```
 
 ---
@@ -160,4 +162,4 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ---
 
-*Built with ❤️ by the Naïve Baes Team.*
+*Built with ❤️ by the Naive Baes Team.*
