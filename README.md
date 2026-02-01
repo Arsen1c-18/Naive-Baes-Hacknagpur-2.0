@@ -4,7 +4,6 @@
 > *Empowering users against deepfakes, online harassment, and digital threats with AI.*
 
 ![Status](https://img.shields.io/badge/Status-Active-success)
-![Stack](https://img.shields.io/badge/Stack-MERN%20%2B%20FastAPI-blue)
 ![License](https://img.shields.io/badge/License-MIT-purple)
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
 ![React](https://img.shields.io/badge/React-18-blue)
