@@ -4,7 +4,7 @@ from rule_engine import rule_based_detect
 from llm_wrapper import generate_risk_analysis
 
 
-# 🔴 Risk threshold logic (moved here)
+# Risk threshold logic (moved here)
 def get_risk_level(confidence: float) -> str:
     if confidence >= 0.7:
         return "HIGH"
