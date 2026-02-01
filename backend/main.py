@@ -16,7 +16,12 @@ import requests
 # Import pipelines and alerts
 from pipelines.ocr_pipeline import analyze_screenshot
 from pipelines.text_pipeline import analyze_text
-from pipelines.voice_pipeline import analyze_voice
+try:
+    from pipelines.voice_pipeline import analyze_voice
+except ImportError:
+    print("WARNING: 'faster-whisper' not installed. Voice analysis disabled.")
+    def analyze_voice(*args, **kwargs):
+        raise HTTPException(status_code=501, detail="Voice analysis module not installed on server.")
 from rag_template.rag_retriever import get_template
 from rag_template.rag_generator import generate_report
 from pipelines.safety_chat import SafetyChat

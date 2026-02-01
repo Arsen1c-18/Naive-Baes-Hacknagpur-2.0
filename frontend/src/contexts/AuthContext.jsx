@@ -20,11 +20,13 @@ export const AuthProvider = ({ children }) => {
         }
 
         const session = supabase.auth.getSession().then(({ data: { session } }) => {
+            if (session?.user) setProfileLoading(true); // Optimistically set loading to prevent ProtectedRoute race condition
             setUser(session?.user ?? null);
             setLoading(false);
         });
 
         const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+            if (session?.user) setProfileLoading(true);
             setUser(session?.user ?? null);
             setLoading(false);
         });
@@ -73,14 +75,28 @@ export const AuthProvider = ({ children }) => {
                     if (newProfile) {
                         setProfile(newProfile);
                     } else {
-                        console.error("Failed to create profile:", createError);
-                        // Only redirect if absolutely failed
-                        const flow = sessionStorage.getItem('auth_flow');
-                        if (flow === 'login') {
-                            await signOut();
-                            navigate('/signup?message=Account+does+not+exist.+Please+Sign+Up');
-                            setProfileLoading(false);
-                            return;
+                        console.warn("Profile creation failed, attempting to fetch existing profile...", createError);
+
+                        // Fallback: Check if profile exists (handles race conditions and other RLS issues)
+                        const { data: existingProfile, error: retryError } = await supabase
+                            .from('public_profiles')
+                            .select('*')
+                            .eq('id', user.id)
+                            .maybeSingle();
+
+                        if (existingProfile) {
+                            console.log("Found existing profile during fallback:", existingProfile);
+                            setProfile(existingProfile);
+                        } else {
+                            console.error("Critical: Could not create or find profile.", retryError);
+                            // Only redirect if absolutely failed
+                            const flow = sessionStorage.getItem('auth_flow');
+                            if (flow === 'login') {
+                                await signOut();
+                                navigate('/signup?message=Account+does+not+exist.+Please+Sign+Up');
+                                setProfileLoading(false);
+                                return;
+                            }
                         }
                     }
                 }

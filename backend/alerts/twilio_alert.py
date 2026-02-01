@@ -13,7 +13,7 @@ twilio = Client(
     os.environ["TWILIO_AUTH_TOKEN"]
 )
 
-FROM_NUMBER = os.environ["TWILIO_PHONE"]
+FROM_NUMBER = os.environ["TWILIO_PHONE_NUMBER"]
 
 CYBERCELL_NUMBER = "+919999999999"
 POLICE_NUMBER = "+91112"

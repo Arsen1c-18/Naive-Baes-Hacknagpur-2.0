@@ -113,8 +113,8 @@ const MediaCheck = () => {
                                         }`}>
                                         {result.detected ? 'Suspicious Elements Detected' : 'Media Appears Authentic'}
                                     </h3>
-                                    <p className="text-lg my-2 text-gray-200">{result.message}</p>
-                                    <div className="text-sm text-gray-400">
+                                    <p className="text-lg my-2 text-slate-900">{result.message}</p>
+                                    <div className="text-sm text-slate-700">
                                         Confidence: <span className="font-mono">{result.confidence}%</span>
                                     </div>
 

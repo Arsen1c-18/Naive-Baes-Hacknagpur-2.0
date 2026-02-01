@@ -15,11 +15,20 @@ const ProtectedRoute = ({ children }) => {
         return <div className="min-h-screen flex items-center justify-center bg-bg text-indigo-600">Loading Profile...</div>;
     }
 
+    // Debug Redirect Logic
+    if (location.pathname !== '/complete-profile') {
+        console.log('ProtectedRoute Check:', {
+            connected: supabaseConnected,
+            hasProfile: !!profile,
+            hasName: !!profile?.name,
+            path: location.pathname,
+            profile: profile
+        });
+    }
+
     // Profile Completion Check
-    // If Supabase is connected, User is logged in, but Profile is missing OR Name is missing...
-    // AND we are not already on the completion page...
-    // THEN redirect to /complete-profile
     if (supabaseConnected && (!profile || !profile.name) && location.pathname !== '/complete-profile') {
+        console.warn('Redirecting to /complete-profile because profile or name is missing', profile);
         return <Navigate to="/complete-profile" replace />;
     }
 

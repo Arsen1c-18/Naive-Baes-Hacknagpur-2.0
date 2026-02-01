@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import ReactMarkdown from 'react-markdown';
+
 import PageShell from '../components/PageShell';
 import { REPORT_TEMPLATES } from '../lib/mockData';
 import { api } from '../lib/api';
-import { Copy, FileText, Check } from 'lucide-react';
+import { Copy, FileText, Check, Printer } from 'lucide-react';
+
 import { motion, AnimatePresence } from 'framer-motion';
 
 const TemplateGenerator = () => {
@@ -37,6 +40,48 @@ const TemplateGenerator = () => {
         navigator.clipboard.writeText(generatedReport);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
+    };
+
+    const handlePrint = () => {
+        if (!generatedReport) return;
+        const printWindow = window.open('', '_blank');
+        const content = document.getElementById('report-markdown-container')?.innerHTML || generatedReport;
+
+        printWindow.document.write(`
+            <html>
+            <head>
+                <title>Incident Report - ${type}</title>
+                <style>
+                    body { font-family: 'Helvetica Neue', Arial, sans-serif; padding: 40px; color: #000; line-height: 1.6; max-width: 800px; margin: 0 auto; }
+                    h1 { font-size: 24px; margin-bottom: 20px; color: #000; }
+                    h2 { font-size: 18px; margin-top: 25px; margin-bottom: 10px; color: #333; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
+                    h3 { font-size: 16px; margin-top: 20px; margin-bottom: 10px; font-weight: bold; }
+                    p { margin-bottom: 12px; }
+                    ul, ol { margin-bottom: 12px; padding-left: 20px; }
+                    li { margin-bottom: 4px; }
+                    strong { font-weight: bold; color: #000; }
+                    .report-header { text-align: center; margin-bottom: 40px; padding-bottom: 20px; border-bottom: 2px solid #000; }
+                    .footer { margin-top: 50px; border-top: 1px solid #ccc; padding-top: 10px; font-size: 12px; color: #666; text-align: center; }
+                </style>
+            </head>
+            <body>
+                <div class="report-header">
+                    <h1>Incident Report: ${type}</h1>
+                    <p style="color: #666;">Generated via Digital Safety Companion</p>
+                </div>
+                <div class="content">
+                    ${content}
+                </div>
+                <div class="footer">
+                    Confidential &bull; Generated on ${new Date().toLocaleDateString()}
+                </div>
+                <script>
+                    window.onload = () => { setTimeout(() => { window.print(); window.close(); }, 500); }
+                </script>
+            </body>
+            </html>
+        `);
+        printWindow.document.close();
     };
 
     return (
@@ -103,6 +148,13 @@ const TemplateGenerator = () => {
                             <FileText size={18} className="text-accent" /> Generated Report
                         </h3>
                         <button
+                            className="btn text-xs py-1.5 px-3 bg-surface-border hover:bg-surface-border/80 text-white flex items-center gap-2 mr-2"
+                            onClick={handlePrint}
+                            disabled={!generatedReport}
+                        >
+                            <Printer size={14} /> Print PDF
+                        </button>
+                        <button
                             className={`btn text-xs py-1.5 px-3 transition-colors ${copied ? 'bg-green-500/20 text-green-400' : 'bg-surface-border hover:text-white text-gray-400'}`}
                             onClick={handleCopy}
                             disabled={!generatedReport}
@@ -126,9 +178,24 @@ const TemplateGenerator = () => {
                                     key="report"
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
-                                    className="whitespace-pre-wrap"
+                                    className="prose prose-invert max-w-none"
+                                    id="report-markdown-container"
                                 >
-                                    {generatedReport}
+                                    <ReactMarkdown
+                                        components={{
+                                            h1: ({ node, ...props }) => <h1 className="text-2xl font-bold mb-4 text-white" {...props} />,
+                                            h2: ({ node, ...props }) => <h2 className="text-xl font-bold mt-6 mb-3 text-white border-b border-gray-800 pb-2" {...props} />,
+                                            h3: ({ node, ...props }) => <h3 className="text-lg font-bold mt-4 mb-2 text-white" {...props} />,
+                                            p: ({ node, ...props }) => <p className="mb-4 text-gray-300 leading-relaxed" {...props} />,
+                                            ul: ({ node, ...props }) => <ul className="list-disc pl-5 mb-4 text-gray-300 space-y-1" {...props} />,
+                                            ol: ({ node, ...props }) => <ol className="list-decimal pl-5 mb-4 text-gray-300 space-y-1" {...props} />,
+                                            li: ({ node, ...props }) => <li className="pl-1" {...props} />,
+                                            strong: ({ node, ...props }) => <strong className="font-bold text-white" {...props} />,
+                                            blockquote: ({ node, ...props }) => <blockquote className="border-l-4 border-primary/50 pl-4 py-1 my-4 bg-primary/5 italic text-gray-400" {...props} />,
+                                        }}
+                                    >
+                                        {generatedReport}
+                                    </ReactMarkdown>
                                 </motion.div>
                             ) : (
                                 <motion.div

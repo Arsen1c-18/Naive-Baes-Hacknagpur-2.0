@@ -252,6 +252,14 @@ const CompleteProfile = () => {
                     </button>
                 </form>
             </div>
+            {/* Debug Info */}
+            <div className="fixed bottom-4 right-4 bg-black/80 text-white p-4 rounded text-xs z-50 max-w-sm overflow-auto">
+                <p><strong>Debug Info:</strong></p>
+                <p>User ID: {user?.id || 'No User'}</p>
+                <p>Profile: {profile ? JSON.stringify(profile) : 'Null'}</p>
+                <p>Connected: {supabaseConnected ? 'Yes' : 'No'}</p>
+                <p>Loading: {loading ? 'Yes' : 'No'}</p>
+            </div>
         </div>
     );
 };
