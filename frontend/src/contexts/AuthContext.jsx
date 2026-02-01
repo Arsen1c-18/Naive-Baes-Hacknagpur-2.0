@@ -53,15 +53,35 @@ export const AuthProvider = ({ children }) => {
                     .eq('id', user.id)
                     .maybeSingle();
 
-                if (profileData) setProfile(profileData);
-                else {
+                if (profileData) {
+                    setProfile(profileData);
+                } else {
                     // Check if user is trying to Login but has no profile (New User)
-                    const flow = sessionStorage.getItem('auth_flow');
-                    if (flow === 'login') {
-                        await signOut();
-                        navigate('/signup?message=Account+does+not+exist.+Please+Sign+Up');
-                        setProfileLoading(false);
-                        return;
+                    // Attempt to create a profile automatically since the database trigger might be missing
+                    const { data: newProfile, error: createError } = await supabase
+                        .from('public_profiles')
+                        .insert([
+                            {
+                                id: user.id,
+                                name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'User',
+                                avatar_url: user.user_metadata?.avatar_url
+                            }
+                        ])
+                        .select()
+                        .single();
+
+                    if (newProfile) {
+                        setProfile(newProfile);
+                    } else {
+                        console.error("Failed to create profile:", createError);
+                        // Only redirect if absolutely failed
+                        const flow = sessionStorage.getItem('auth_flow');
+                        if (flow === 'login') {
+                            await signOut();
+                            navigate('/signup?message=Account+does+not+exist.+Please+Sign+Up');
+                            setProfileLoading(false);
+                            return;
+                        }
                     }
                 }
 
