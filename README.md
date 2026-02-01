@@ -13,6 +13,7 @@
 
 ## 📖 Overview
 
+PS : S4H - 5 
 **Safety Companion** is a comprehensive digital safety platform designed to be your personal guardian in the digital age. It leverages advanced AI to detect manipulated media and analyzes text for malicious intent, providing real-time protection and reporting tools.
 
 Unlike standard safety apps,it uses a hybrid analysis approach—combining local, privacy-focused models (Whisper, EasyOCR) with powerful cloud LLMs (Llama 3 via Groq) for detailed explanations.
