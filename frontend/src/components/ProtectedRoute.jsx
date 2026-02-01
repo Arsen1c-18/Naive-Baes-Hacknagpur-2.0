@@ -26,9 +26,9 @@ const ProtectedRoute = ({ children }) => {
         });
     }
 
-    // Profile Completion Check
-    if (supabaseConnected && (!profile || !profile.name) && location.pathname !== '/complete-profile') {
-        console.warn('Redirecting to /complete-profile because profile or name is missing', profile);
+    // Profile Completion Check: Require Name AND Phone
+    if (supabaseConnected && (!profile || !profile.name || !profile.phone) && location.pathname !== '/complete-profile') {
+        console.warn('Redirecting to /complete-profile because profile, name, or phone is missing', profile);
         return <Navigate to="/complete-profile" replace />;
     }
 
