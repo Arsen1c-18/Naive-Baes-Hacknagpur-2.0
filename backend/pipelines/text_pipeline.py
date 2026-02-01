@@ -34,11 +34,22 @@ def analyze_text(text: str):
         confidence = top_score
         source = "ml"
 
+    risk_level = get_risk_level(confidence)
+
+    # Optimization: Skip LLM explanation for safe content
+    analysis_text = "Content appears safe. No further analysis required."
+    if risk_level in ["MEDIUM", "HIGH"]:
+        try:
+            analysis_text = generate_risk_analysis(text, final_label, risk_level)
+        except Exception as e:
+            print(f"LLM Analysis failed: {e}")
+            analysis_text = f"Automated analysis failed, but risk level is {risk_level}."
+
     return {
         "pattern_detected": final_label,
-        "risk_level": get_risk_level(confidence),
+        "risk_level": risk_level,
         "confidence": round(confidence, 3),
         "rules_triggered": rule_hits,
         "decision_source": source,
-        "analysis": generate_risk_analysis(text, final_label, get_risk_level(confidence))
+        "analysis": analysis_text
     }

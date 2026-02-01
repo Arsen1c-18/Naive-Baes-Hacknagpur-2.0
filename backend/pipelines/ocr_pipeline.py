@@ -1,8 +1,10 @@
 import easyocr
+import torch
 from pipelines.text_pipeline import analyze_text
 
 # Initialize EasyOCR reader once (English + Hindi)
-reader = easyocr.Reader(['en', 'hi'], gpu=False)
+gpu_enabled = torch.cuda.is_available()
+reader = easyocr.Reader(['en', 'hi'], gpu=gpu_enabled)
 
 
 def extract_text_from_image(image_path: str) -> str:

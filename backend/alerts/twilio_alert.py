@@ -3,23 +3,42 @@ from twilio.rest import Client
 from supabase import create_client
 from fastapi import HTTPException
 
-supabase = create_client(
-    os.environ["SUPABASE_URL"],
-    os.environ["SUPABASE_KEY"]
-)
 
-twilio = Client(
-    os.environ["TWILIO_ACCOUNT_SID"],
-    os.environ["TWILIO_AUTH_TOKEN"]
-)
+supabase_url = os.getenv("SUPABASE_URL")
+supabase_key = os.getenv("SUPABASE_KEY")
+twilio_sid = os.getenv("TWILIO_ACCOUNT_SID")
+twilio_token = os.getenv("TWILIO_AUTH_TOKEN")
+FROM_NUMBER = os.getenv("TWILIO_PHONE_NUMBER")
 
-FROM_NUMBER = os.environ["TWILIO_PHONE_NUMBER"]
+supabase = None
+if supabase_url and supabase_key:
+    try:
+        supabase = create_client(supabase_url, supabase_key)
+    except Exception as e:
+        print(f"Warning: Supabase init failed: {e}")
+
+twilio = None
+if twilio_sid and twilio_token:
+    try:
+        twilio = Client(twilio_sid, twilio_token)
+    except Exception as e:
+        print(f"Warning: Twilio init failed: {e}")
 
 CYBERCELL_NUMBER = "+919999999999"
 POLICE_NUMBER = "+91112"
 
 
 def verify_user(access_token: str):
+    if not supabase:
+        # Mock user for dev/demo if Supabase is missing
+        print("Supabase not configured, bypassing verification")
+        class MockUser:
+            pass
+        user_obj = MockUser()
+        user_obj.user = MockUser()
+        user_obj.user.email = "demo@example.com"
+        return user_obj
+
     user = supabase.auth.get_user(access_token)
     if not user:
         raise HTTPException(status_code=401, detail="Invalid user")
@@ -27,11 +46,18 @@ def verify_user(access_token: str):
 
 
 def send_alert(to_number: str, message: str):
-    twilio.messages.create(
-        body=message,
-        from_=FROM_NUMBER,
-        to=to_number
-    )
+    if not twilio or not FROM_NUMBER:
+        print(f"Twilio not configured. Would send '{message}' to {to_number}")
+        return
+
+    try:
+        twilio.messages.create(
+            body=message,
+            from_=FROM_NUMBER,
+            to=to_number
+        )
+    except Exception as e:
+        print(f"Failed to send Twilio alert: {e}")
 
 
 def trigger_critical_alerts(
